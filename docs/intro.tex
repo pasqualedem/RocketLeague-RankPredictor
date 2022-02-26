@@ -1,0 +1,228 @@
+\section{Abduction} \label{seq:intro}
+The notion of abduction was firstly introduced by the philosopher Pierce, he distinguished three forms of reasoning:
+
+\begin{itemize}
+    \item \textbf{Deduction}: an analytic process based on the application of general rules to particular cases, with the inference of a result;
+    \item \textbf{Induction}: synthetic reasoning which infers the rule from the case and the result;
+    \item \textbf{Abduction}: another form of synthetic inference, but of the case from a rule and a result.
+\end{itemize}
+
+Abduction is widely used in common-sense reasoning, for instance in diagnosis, 
+to reason from effect to cause. We consider here an example drawn from \cite{kakas1992abductive}:
+
+Consider the following theory \(T\)
+
+\begin{align*} 
+grass-is-wet &\leftarrow  rained-last-night \\
+grass-is-wet &\leftarrow sprinkler-was-on \\
+shoes-are-wet &\leftarrow grass-is-wet
+\end{align*}
+
+
+By observing that our shoes are wet, we can consider rained-last-night as a possible explanation, 
+i.e. a set of hypotheses that together with the explicit knowledge in \(T\) implies the given observation. 
+Also Sprinkler-was-on is a possible explanation.
+
+The core idea of abduction is this: computing such explanations for observations. 
+It is a form of non-monotonic reasoning, because an explanation consistent in a certain state of a knowledge base may become inconsistent when new information is added. 
+In the example above the explanation rained-last-night may turn out to be false, 
+and the alternative explanation sprinkler-was-on may be the true cause for the given observation. 
+In abductive reasoning a general characteristic is the existence of multiple explanations, and the selection of "preferred" explanations is an important problem.
+
+The abduction application are various:
+\begin{itemize}
+    \item \textbf{Fault diagnosis}: 
+        in medical diagnosis, for example, the candidate hypotheses are the possible causes (diseases), 
+        and the observations are the symptoms to be explained;
+    \item \textbf{High level vision}: using the hypotheses as the objects to be recognized and the observations are the description of the objects.
+    \item \textbf{Natural language understanding}: to interpret ambiguous sentences;
+    \item \textbf{Planning}: plans can be viewed as explanations of the given goal state to be reached.
+\end{itemize}
+
+Other applications does not have a causal interpretation:
+
+\begin{itemize}
+    \item \textbf{Knowledge assimilation}: 
+        The assimilation of a new datum can be performed by adding to the theory new hypotheses that are explanations for the datum.
+    \item \textbf{Default reasoning}: here we look for for general rules to be used in absence of contradictions, 
+    thus we can view the conclusions as observations to be explained by means of assumptions which hold by default unless a contradiction can be shown.
+\end{itemize}
+
+\subsection{Abduction in logic}
+
+Given a set of sentences \(T\) (a theory presentation), and a sentence \(G\) (observation), to a first approximation, 
+the abductive task can be characterized as the problem of finding a set of sentences \(\delta\) (abductive explanation for \(T\)) such that:
+
+\begin{equation}
+ T \cup \Delta \vDash G
+ \label{eqn:abl1}
+\end{equation}
+\begin{equation}
+ T \cup \Delta \text{ is consistent}
+ \label{eqn:abl2}
+\end{equation}
+
+This characterization of abduction is independent of the language in which \(T\), \(G\) and $\Delta$ are formulated. 
+The consistency requirement in \refeq{eqn:abl2} is not explicit in Peirce's more informal characterization of abduction, but it is a natural further requirement.
+
+In fact, these two conditions \refeq{eqn:abl1} and \refeq{eqn:abl2} alone are too weak to capture Peirce's notion. 
+In particular, to distinguish abductive explanations from inductive generalizations are needed additional restrictions on $\Delta$.  
+Moreover, we also need to restrict $\Delta$ so that it conveys some reason why the observations hold, 
+e.g. we do not want to explain one effect in terms of another effect, but only in terms of some cause. 
+For both of these reasons, explanations are often restricted to belong to a special pre-specified, domain-specific class of sentences called abducible.
+
+Abduction can also be applied to logic programming, it can be computed by extending SLD and SLDNF.
+Instead of failing in a proof when a selected subgoal fails to unify with the head of any rule, the subgoal can be viewed as a hypothesis. 
+This is similar to viewing abducibles as "askable" conditions which are treated as qualifications to answers to queries. 
+In the same way that it is useful to distinguish a subset of all predicates as "askable", it is useful to distinguish certain predicates as abducible. 
+In fact, it is generally convenient to choose, as abducible predicates, ones which are not conclusions of any clause.
+This restriction can be imposed without loss of generality, and has the added advantage of ensuring that all explanations will be basic.
+
+\subsection{Integrity Constraints}
+
+Abduction as presented so far can be restricted by the use of integrity constraints. 
+Integrity constraints are useful in many ways: to avoid unintended updates to a database or knowledge base,
+or can be used to represent some specific properties of a program. 
+The basic idea is to restrict the possible states of a knowledge base to a set of legal states; 
+the satisfaction integrity constraints are meant to ensure these legal staset.
+
+Given a set of integrity constraints, $I$, of first-order closed formula, 
+we can replace the second condition \refeq{eqn:abl2} of the semantic definition of abduction with: 
+
+\begin{equation}
+    T \cup \Delta \text{ satisfies } I
+    \label{eqn:abl3}
+   \end{equation}
+
+Integrity constraints can be also written in the form of denials, i.e.:
+ \[ \leftarrow A_1, \dots\ ,\ A_m,\ not\ A_{m+1},\ \dots,\ not\ A_{m+n}\]
+
+\subsection{Abductive framework}%{Abductive Logic Programming} 
+
+We can define an abductive framework as a triple $\langle P, A , I\rangle $ 
+where $A$ is the set of abducible predicates, therefore $\Delta \subseteq A$.
+
+\begin{itemize}
+    \item $P$ is a logic program (a set of Horn clauses);
+    \item $A$ is a set of predicate symbols, called \textit{abducible predicates};
+    \item $IC$ is a set of integrity constraints in the form of denials
+\end{itemize}
+
+The extension of logic programming that solves problems using abductive reasoning is called \textit{Abductive logic programming} (ALP). \\
+In ALP, Negation as Failure can be simulated through abduction and is obtained by converting the logic program in its positive version:
+
+\begin{itemize}
+    \item for each predicate symbol $p$, a new predicate $not$ $p$ is added to A
+    \item for each predicate, a new constraint $ \leftarrow p(X)$, $not$ $p(X)$ is added to I;
+    \item fot each negative literal $not$ $p(t)$, we replace it with $not$ $\overline{p}(t)$ (\textit{default atoms}).
+\end{itemize}
+
+The complement $\overline{l}$ of a literal $l$ is defined as:
+
+\begin{equation}
+    \overline{l} = 
+    \begin{cases}
+        not \ p(x) & \text{if } l = p(x) \\
+        p(x) & \text{if } l = not \ \overline{p}(x)
+    \end{cases}
+\end{equation}
+
+Kankas and Mancarella (1990), defined a proof procedure for positive version of abductive logic programs.
+The procedure starts from a goal $G$ and a set of initial assumptions $\Delta_i$, and returns a set of consistent hypothesis $\Delta_o$, s.t. $\Delta_o \supseteq \Delta_i$ and $\Delta_o$ is an abductive explanation of $G$.
+The procedure is composed by two phases \textit{abductive derivation} and \textit{consistency derivation} 
+
+An abductive derivation is the standard SLD resolution suitably extended in order to consider abducibles. When an abducible atom $\delta$ is encountered, it is added to the current set of hypotheses, then, a consistency derivation is performed to ensure that $\delta$ satisfies any integrity constraint containing $\delta$.
+The constraints are satisfied if that the resulting goal fails, thus, in consistency derivation when an abducible is encountered, an abductive derivation is started in order to prove its falsity.
+
+We can define an abductive derivation from $(G_1\ \Delta_1)$ to $(G_n\ \Delta_n)$ in $\langle P, A, I\rangle$ via a selection rule $R$ as a sequence
+
+\begin{equation}
+    (G_1\ \Delta_1),\ (G_2\ \Delta_2),\ ..., \ (G_n\ \Delta_n),  
+\end{equation}
+
+s.t. each $G_i$ has the form $\leftarrow L_1, \ ..., \ L_k$, $R(G_i) = L_j$ and $(G_{i+1}\ \Delta_{i+1})$ is obtained according to one of the following rules:
+
+\begin{enumerate}[label=(A\arabic*)]
+    \item If $L_j$ is not abducible or default, then $G_{i+1} = C$ and $\Delta_{i+1} = \Delta_i$ where $C$ is the resolvent of some clause in $P$ with $G_i$ on the selected literal $L_j$;
+    \item If $L_j$ is abducible or default and $L_j \in \Delta_i$ then \\
+    $G_{i+1} = \leftarrow L_1,\ \dots,\ L_{j-1},\ L_{j+1},\ \dots,\ L_k \text{ and } \Delta_{i+1} = \Delta_i$;
+    \item If $L_j$ is abducible or default, $L_j \notin \Delta_i$ and $\overline{L_j} \notin \Delta_i$ and there exists a consistency derivation from $(L_j\ \Delta_i \cup {L_j})$ to $(\{\}\ \Delta')$ then
+    $G_{i+1} = \leftarrow L_1,\ \dots,\ L_{j-1},\ L_{j+1},\ \dots,\ L_k \text{ and } \Delta_{i+1} = \Delta_i$.
+\end{enumerate}
+
+Cases $(A1)$ and $(A2)$ are SLD-resolution steps with the rules of $P$ and abductive or default hypotheses, respectively. In case $(A3)$ a new abductive or default hypotheses is required and it is added to the current set of hypotheses provided it is consistent.
+
+So we define a consistency derivation for an abducible or default literal $\alpha$ from $(\alpha,\ \Delta_1)$ to $(F_n\ \Delta_n)$ in $\langle P, A, I\rangle$ as sequence
+
+\begin{equation}
+    (\alpha\ \Delta_1),\ (F_1\ \Delta_1),\  (F_2\ \Delta_2),\ ..., \ (F_n\ \Delta_n),  
+\end{equation}
+
+where:
+
+\begin{enumerate}[label=(\arabic*)]
+    \item $F_1$ is the union of all goals of the form  $\leftarrow\ L_1,\ \dots,\ L_n$ obtained by resolving the abducible or default $\alpha$ with the denials in $I$ with no such goal been
+    empty, $\leftarrow$;
+    \item for each $i > 1$, $F_i$ has the form $\{ \leftarrow L_1,\ \dots,\ L_k\} \cup F'_i$ and for some $j = 1\dots\ k\ (F_{i+1}\ \Delta_{i+1)}$ is obtained according to one of the following rules:
+    \begin{enumerate}[label=(C\arabic*)]
+        \item  If $L_j$ is not abducible or default, then $F_{i+1} = C' \cup F'_i$ where $C'$ is the set of all resolvents of clauses in $P$ with $\leftarrow L_1,\ \dots,\ L_k$ on the literal $L_j$ and $\leftarrow \notin C'$, and $\Delta_{i+1} = \Delta_i$;
+        \item If $L_j$ is abducible or default, $L_j \in \Delta_i$ and $k > 1$, then \\
+        $F_{i+1} = \{ \leftarrow L_1,\ \dots,\ L_{j-1},\ L_{j+1},\ \dots,\ L_k \} \cup F'_i $ and $\Delta_{i+1} = \Delta_i$;
+        \item If $L_j$ is abducible or default, $\overline{L_j} \in \Delta_i$ then $F_{i+1} = F'_i$ and $\Delta_{i+1} = \Delta_i$;
+        \item If $L_j$ is abducible or default, $L_j \notin \Delta_i$ and $\overline{L_j} \notin \Delta_i$ and there exists a abductive derivation from $(\leftarrow \overline{L_j}\ \Delta_i)$ to $(\leftarrow \Delta')$ then
+        $F_{i+1} = F'_i$ and $\Delta_{i+1} = \Delta'$.
+    \end{enumerate}
+\end{enumerate}
+
+In case $(C1)$ the current branch splits into as many branches as the number of resolvents of  $\{ \leftarrow L_1,\ \dots,\ L_k\}$ with the clauses in $P$ on $L_j$. If the empty clause is one of such resolvents the whole consistency check fails.
+In case $(C2)$ the goal under consideration is made simpler if literal $L_j$ belongs to the current set of hypotheses $\Delta_i$. 
+In case $(C3)$ the current branch is already consistent under the assumptions in $\Delta_i$, and this branch is dropped from the consistency checking.
+In case $(C4)$ the current branch of the consistency search space can be dropped provided $\leftarrow \overline{L_j}$ is abductively provable.
+
+Given a query $L$, the procedure succeeds, and returns the set of abducibles $\Delta$ if there exists an abductive derivation from $(\leftarrow L\ \{\})$ to $(\leftarrow  \alpha)$. With abuse of terminology, in this case, we also say that the abductive derivation succeeds.
+
+\subsubsection{PEALP}
+
+The Abductive framework is extended in \cite{ferilli2018extending}, by augmenting the expressive power of IC and making it more flexible by handling probability. This new setting is called Probabilistic Expressive Abductive Logic Programming (PEALP).
+
+In ALP, IC are considered in form of denials, so $nand$ of a set of literals; in EALP instead, the constraint are generalized by handling all the logical operators; they are summarized in \reftab{tab:ics}.
+
+\begin{table}[h]
+    \label{tab:ics}
+    \centering
+    \begin{tabular}{|c|}
+    \hline
+    $nand({[}l_1,...,l_n{]})$                  \\ \hline
+    $xor({[}l_1,...,l_n{]})$                   \\ \hline
+    $or({[}l_1,...,l_n{]})$                    \\ \hline
+    $if({[}l_1,...,l_n{]},{[}l_1,...,l_m{]})$  \\ \hline
+    $iff({[}l_1,...,l_n{]},{[}l_1,...,l_m{]})$ \\ \hline
+    $and({[}l_1,...,l_n{]})$                   \\ \hline
+    $nor({[}l_1,...,l_n{]})$                   \\ \hline
+    \end{tabular}
+    \caption{\label{tab:ics} Type of integrity constraints}
+\end{table}
+
+EALP is furthermore extendend by adding a probabilistic framework into it; this new setting enables the handling of uncertainty. An abductive explanation becomes a \textit{possible world} in which a set of abducibles is assumed to be true, therefore having consistent combinations of true or negated abducibles that explain the goal is like having multiple possible worlds. The choices for possible worlds are in the clauses used (already present in ALP), and in the ways a constraint could be satisfied, or violated, in so far as ICs are also probabilistic so their violation could be taken in account.
+Formally, a Probabilistic Expressive Abductive Logic Program (PEALP) $T$ is defined as a tuple $T = \langle P, A, I, p \rangle$ where:
+\begin{itemize}
+    \item $P$ is a logic program;
+    \item $A$ is a set of predicates (abducibles);
+    \item $I$ is a set of integrity constraints;
+    \item $p: P \cup I \cup ground(A) \to [0,1]$ is a probability function.
+\end{itemize}
+A possible probabilistic abductive explanation $E$ for a goal $G$ is defined as a triple $E = \langle L, \Delta, C \rangle$ where:
+\begin{itemize}
+    \item $L$ is a set of facts in $P$;
+    \item $\Delta$ is the set of ground abduced literals
+    \item $C$ is the set of instances of probabilistic constraints in $I$ involved in the proof of $G$
+\end{itemize}
+
+Thus, in this setting, any abducible and integrity constraint is equipped with a degree of validity, or a likelihood defined by the function $p$. The probability of a possible world, is the product of the probabilities of the abducibles, constraints and clauses involved in the abductive explanation as shown in \refeq{eq:p_world}
+
+\begin{equation}
+    P(E) = \prod_{l \in L} p(l) \cdot \prod_{\delta \in \Delta} p(\delta) \cdot \prod_{c \in C} p(c)
+    \label{eq:p_world}
+\end{equation}
+
+Furthermore, by setting all the probabilities as 1, we would return in a deterministic setting.

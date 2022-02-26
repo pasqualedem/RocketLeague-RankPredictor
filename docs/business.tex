@@ -1,0 +1,81 @@
+\section{Business understanding} \label{seq:business}
+
+ In this step the objective is to determine and understand the context and the scope of the project. So it has a lot in common with the initial steps of any significant project undertaking.
+
+ \subsection{Determine Business Objectives}
+
+
+\begin{figure}[h]
+    \includegraphics[width=\linewidth]{res/RL}
+    \caption{One of the main Rocket League artworks}
+\end{figure}
+
+In recent years video games gained a lot of popularity, above all, multiplayer games; some of this are considered competitive and many sportive events take place around them.
+Rocket League is a multiplayer competitive online game which is an hybrid that unifies soccer with car race games.
+
+Thus, each match follows more or less soccer rules, but instead of human players there are cars controlled by the players. The number of players per team can be 1 (duel), 2, or 3 (standard). In our study we will focus on the main modality, that is 3vs3.
+
+\subsubsection{Ranking System}
+
+\begin{figure}[h]
+    \includegraphics[width=\linewidth]{res/rankings}
+    \caption{Rocket league rankings}
+    \label{fig:ranks}
+\end{figure}
+
+In each modality, the player, after playing 10 online matches, is classified into a rank, based on the result of the 10 played matches. The ranks (visually shown in \reffig{fig:ranks}) are: 
+
+
+\begin{multicols}{3}
+    \begin{itemize}
+        \item Bronze I
+        \item Silver I
+        \item Gold I
+        \item Platinum I      
+        \item Diamond I        
+        \item Champion I         
+        \item Grand Champion I    
+        \item Bronze II
+        \item Silver II
+        \item Gold II       
+        \item Platinum II     
+        \item Diamond  II         
+        \item Champion II         
+        \item Grand Champion II
+        \item Bronze III
+        \item Silver III
+        \item Gold III    
+        \item Platinum III     
+        \item Diamond  III        
+        \item Champion III         
+        \item Grand Champion III
+    \end{itemize}
+\end{multicols}
+
+\begin{itemize}
+    \item Supersonic Legend
+\end{itemize}
+
+Each rank, is split in four divisions (Division I, II, III and IV). And, each rank with its divisions is itself a discretization of a number, that is the Match Making Ranking (MMR). 
+The MMR goes from 0 to potentially infinity, however the last rank: Supersonic Legend, takes the interval [1861, +Infinity]. A detailed view on MMRs and rankings is shown in \reftab{tab:mmrs}.
+
+When the player starts playing, it is assigned an MMR of 600, that correspond to Gold III Division II. The MMR increase or decrease basing on the outcome of the matches it plays, obviously if he wins it will increase, viceversa if he loses. How much it can gain or lose at the end of the match is based on the number of played matches. In the first match, the gain/loss is +/-150. In the second match the values is halved, in it logarithmically decrease, until after some dozen of matches, it converge to +/- 10.
+
+With this system, the player, will be classified in its most appropriate rank after some matches and, therefore will compete with players of the same skill level.
+
+Our business objectives are, therefore two:
+\begin{itemize}
+    \item Analyze the statistics of each player of a match and predict its rank based on the performances that he shown;
+    \item Divide players into categories based on the statistics of the match
+\end{itemize}
+\input{res/tables/mmrs}
+
+This work will result in a system able to measure the skill shown in a match for each player, and in a categorization useful to analyze the play styles.
+
+\subsection{Determine Data Mining Goals}
+
+The first goal is a classification/regression task. It is important to establish the granularity of the output. It is impossible to carefully determine each Division as they can change from a match to another, therefore the minimum granularity is the rank; however we still have 22 classes, that is quite high for a classification task. Thus, we could increase granularity by considering only the ranks without levels e.g. Silver instead of Silver II. We can see also this task as regression, as we can predict the MMR. We could also predict the MMR and then discretize into ranks.
+
+The criteria will be based on accuracy and F1 score, we will accept an accuracy higher than 0.7.
+
+The second goal is a clustering task. In this case the success criteria is qualitative, the objective is to define a categorization of play styles, therefore if the recognized clusters and centroids have a significant meaning we can consider the task fulfilled.

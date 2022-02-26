@@ -1,0 +1,75 @@
+\documentclass[
+	12pt, % Default font size, values between 10pt-12pt are allowed
+	%letterpaper, % Uncomment for US letter paper size
+	%spanish, % Uncomment for Spanish
+]{fphw}
+
+% Template-specific packages
+\usepackage[utf8]{inputenc} % Required for inputting international characters
+\usepackage[T1]{fontenc} % Output font encoding for international characters
+\usepackage{mathpazo} % Use the Palatino font
+\usepackage{booktabs} % Required for better horizontal rules in tables
+\usepackage{enumerate} % To modify the enumerate environment
+
+% \documentclass{article}
+% \usepackage[english]{babel}
+% \usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\definecolor{hlink}{HTML}{000099}
+\usepackage[colorlinks=true, allcolors=hlink]{hyperref}
+\usepackage[square,numbers]{natbib}
+\usepackage{float}
+\usepackage[title]{appendix}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{multicol}
+
+\usepackage{textcomp}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{filecontents}
+
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+\pgfplotsset{compat=1.9}
+
+\geometry{top=1in}
+
+\input{prolog}
+
+\bibliographystyle{unsrt}
+
+\newcommand{\refeq}[1]{\hyperref[#1]{(\ref*{#1})}}
+\newcommand{\refseq}[1]{\hyperref[#1]{section \ref*{#1}}}
+\newcommand{\reftab}[1]{\hyperref[#1]{table \ref*{#1}}}
+\newcommand{\reffig}[1]{\hyperref[#1]{figure \ref*{#1}}}
+\newcommand{\refcode}[1]{\hyperref[#1]{(Code to test it)}}
+\newcommand{\note}[1]{\textbf{\textcolor{blue}{{NOTE: #1}}}}
+
+\title{Rocket League}
+\author{Pasquale De Marinis}
+
+\institute{University of Bari \\ Department of Computer Science} % Institute or school name
+\class{Big Data} % Course or class name
+\professor{Michelangelo Ceci} % Professor or teacher in charge of the assignment
+
+\begin{document}
+
+\maketitle
+\tableofcontents\newpage
+
+\section{Introduction}
+
+This case study deals with the practical application of the Cross Industry Standard Process for Data Mining, in short CRISP-DM. The main objective is the analysis of Rocket League match replays in order to predict the skill of each player in a specific match.
+
+This documentation will follow the six phases of CRISP-DM, thus in each section, a phase will be described, however the process is iterative, therefore it will anticipate in each section analysis that can be chronologically distant.
+\input{business}
+\input{data}
+
+\newpage
+\bibliography{sample}
+\end{document}

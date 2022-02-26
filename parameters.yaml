@@ -1,0 +1,17 @@
+experiment: try
+models:
+  linear:
+    penalty: ['l1', 'l2']
+  naive_bayes:
+    var_smoothing: [1e-9]
+  random_forest:
+    n_estimators: [10, 100]
+    criterion: ['gini', 'entropy']
+    class_weight: [None, 'balanced']
+  xgbclassifier:
+    n_estimators: [10, 100]
+    eta: [0.01, 0.1, 0.2, 0.3]
+
+data:
+  path: 'data/preprocessed/dataset_selected.csv'
+  target: 'tier'
