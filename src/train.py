@@ -18,6 +18,7 @@ from sklearn.model_selection import ParameterGrid, cross_validate
 from sklearn.linear_model import LogisticRegression
 from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.neighbors import KNeighborsClassifier
 from xgboost import XGBClassifier
 
 
@@ -25,7 +26,8 @@ ESTIMATORS = {
     'linear': LogisticRegression,
     'naive_bayes': GaussianNB,
     'random_forest': RandomForestClassifier,
-    'xgbclassifier': XGBClassifier
+    'xgbclassifier': XGBClassifier,
+    'knn': KNeighborsClassifier
 }
 
 
@@ -124,6 +126,7 @@ class Trainer:
             for key, value in scores.items():
                 client.log_metric(run.info.run_id, key, value=np.mean(value))
             ax = sns.heatmap(np.mean(cm, axis=0), annot=True)
+            sns.set(rc={'figure.figsize': (10, 10)})
             client.log_figure(run.info.run_id, figure=ax.figure, artifact_file="conf_matrix.png")
 
         client = MlflowClient()
