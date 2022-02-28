@@ -39,7 +39,7 @@ SCORES = {
     'recall_macro': lambda *args, **kwargs: recall_score(*args, **kwargs, average='macro'),
 }
 # SCORES = ['accuracy', 'f1_macro', 'precision_macro', 'recall_macro']
-
+N_JOBS = 0
 
 def scorer(clf, X, y):
     y_pred = clf.predict(X)
@@ -125,13 +125,17 @@ class Trainer:
             scores, cm, estimators = parse_scores(scores)
             for key, value in scores.items():
                 client.log_metric(run.info.run_id, key, value=np.mean(value))
-            ax = sns.heatmap(np.mean(cm, axis=0), annot=True)
-            sns.set(rc={'figure.figsize': (10, 10)})
+            ax = sns.heatmap(np.mean(cm, axis=0), annot=True, fmt=".2f")
+            sns.set(rc={'figure.figsize': (15, 15)})
             client.log_figure(run.info.run_id, figure=ax.figure, artifact_file="conf_matrix.png")
 
         client = MlflowClient()
-        parallel = Parallel(n_jobs=10)
-        parallel(delayed(fit_score)(model, param) for param in runs)
+        if N_JOBS == 0:
+            for param in runs:
+                fit_score(model, param)
+        else:
+            parallel = Parallel(n_jobs=N_JOBS)
+            parallel(delayed(fit_score)(model, param) for param in runs)
 
     def build_dataset(self):
         dataset = pd.read_csv(self.datapath)

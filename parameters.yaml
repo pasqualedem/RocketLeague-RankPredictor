@@ -1,19 +1,18 @@
-experiment: try3
+experiment: Base Preprocessing -- 22 classes
 models:
-#  linear:
-#    penalty: ['l2']
-#  naive_bayes:
-#    var_smoothing: [1e-9]
-#  random_forest:
-#    n_estimators: [10, 100]
-#    criterion: ['gini', 'entropy']
-#    class_weight: [None, 'balanced']
-#  xgbclassifier:
-#    n_estimators: [10, 100]
-#    eta: [0.01, 0.1, 0.2, 0.3]
+  linear:
+    penalty: ['l2']
+  naive_bayes:
+    var_smoothing: [1e-9]
+  random_forest:
+    n_estimators: [10, 100]
+    criterion: ['gini', 'entropy']
+    class_weight: [None, 'balanced']
+  xgbclassifier:
+    n_estimators: [10, 100]
+    eta: [0.01, 0.1, 0.2, 0.3]
   knn:
-#    n_neighbors: [3, 5, 10]
-    n_neighbors: [3]
+    n_neighbors: [3, 5, 10]
 
 data:
   path: 'data/preprocessed/dataset_preprocessed.csv'
