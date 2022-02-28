@@ -1,5 +1,6 @@
 import os
 import random
+import subprocess
 import time
 import datetime
 import json
@@ -94,3 +95,11 @@ class AverageMeter:
     def update(self, value):
         self.sum += value
         self.i += 1
+
+
+def mlflow_server():
+    cmd = "mlflow server"
+    cmd_env = cmd_env = os.environ.copy()
+    child = subprocess.Popen(
+        cmd, env=cmd_env, universal_newlines=True, stdin=subprocess.PIPE,
+    )

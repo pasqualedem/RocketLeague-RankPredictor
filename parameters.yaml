@@ -1,4 +1,4 @@
-experiment: try
+experiment: try3
 models:
 #  linear:
 #    penalty: ['l2']
@@ -8,11 +8,12 @@ models:
 #    n_estimators: [10, 100]
 #    criterion: ['gini', 'entropy']
 #    class_weight: [None, 'balanced']
-  xgbclassifier:
-    n_estimators: [10, 100]
-    eta: [0.01, 0.1, 0.2, 0.3]
+#  xgbclassifier:
+#    n_estimators: [10, 100]
+#    eta: [0.01, 0.1, 0.2, 0.3]
   knn:
-    n_neighbor: [3, 5, 10]
+#    n_neighbors: [3, 5, 10]
+    n_neighbors: [3]
 
 data:
   path: 'data/preprocessed/dataset_preprocessed.csv'

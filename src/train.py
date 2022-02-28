@@ -10,6 +10,7 @@ from joblib import Parallel, delayed
 from mlflow.tracking import MlflowClient
 from scipy.sparse import coo_matrix
 from ast import literal_eval as make_tuple
+from utils import mlflow_server
 
 from sklearn.metrics import confusion_matrix, accuracy_score, f1_score, precision_score, recall_score
 
@@ -89,8 +90,7 @@ class Trainer:
         self.target_feature = None
         self.parse_grids(param_path)
         self.build_dataset()
-        self.exp = mlflow.set_experiment(self.exp_name)
-        mlflow.sklearn.autolog(max_tuning_runs=None, log_models=True, log_post_training_metrics=True)
+        self.setup_mlflow()
 
     def parse_grids(self, param_path):
         with open(param_path, 'r') as param_stream:
@@ -115,7 +115,7 @@ class Trainer:
 
         def fit_score(model, params):
             print(model, '\t', params)
-            run = client.create_run(experiment_id=self.exp.experiment_id)
+            run = client.create_run(experiment_id=self.exp_id)
             client.log_param(run.info.run_id, 'datapath', self.datapath)
             client.log_param(run.info.run_id, 'target', self.target_feature)
             for k, v in params.items():
@@ -136,8 +136,19 @@ class Trainer:
     def build_dataset(self):
         dataset = pd.read_csv(self.datapath)
         y = dataset.pop(self.target_feature)
-        self.X = dataset
-        self.y = y
+        self.X = dataset[:10000]
+        self.y = y[:10000]
+
+    def setup_mlflow(self):
+        mlflow_server()
+        print('Server started!')
+        mlflow.set_tracking_uri("http://127.0.0.1:5000")
+        print('URI set!')
+        exp_info = MlflowClient().get_experiment_by_name(self.exp_name)
+        self.exp_id = exp_info.experiment_id if exp_info else MlflowClient().create_experiment(self.exp_name)
+        print('Experiment set')
+        mlflow.sklearn.autolog(max_tuning_runs=None, log_models=True, log_post_training_metrics=True)
+        print('Autolog on')
 
 
 if __name__ == '__main__':
