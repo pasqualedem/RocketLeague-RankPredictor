@@ -39,7 +39,7 @@ SCORES = {
     'recall_macro': lambda *args, **kwargs: recall_score(*args, **kwargs, average='macro'),
 }
 # SCORES = ['accuracy', 'f1_macro', 'precision_macro', 'recall_macro']
-N_JOBS = 0
+N_JOBS = 10
 
 def scorer(clf, X, y):
     y_pred = clf.predict(X)
@@ -140,8 +140,8 @@ class Trainer:
     def build_dataset(self):
         dataset = pd.read_csv(self.datapath)
         y = dataset.pop(self.target_feature)
-        self.X = dataset[:10000]
-        self.y = y[:10000]
+        self.X = dataset
+        self.y = y
 
     def setup_mlflow(self):
         mlflow_server()
