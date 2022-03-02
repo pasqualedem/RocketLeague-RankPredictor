@@ -71,4 +71,32 @@ We can notice that the the bronze class had very few examples. This has two main
 
 \section{Data preparation}
 
-Data selection ... 
+Data selection was automatically performed during the collection of the dataset. As already said, replays are randomly sampled between two dates representing two Rocket League seasons.
+
+For feature selection the situation is different, the number of features is quite high and we can early see that some of the are correlated, thus we plot a correlation matrix \reftab{fig:corr_matrix}:
+
+\begin{figure}[H]
+    \resizebox{1.1\linewidth}{!}{\includegraphics{res/imgs/correlations.pdf}}
+    \label{fig:corr_matrix}
+    \caption{Features correlation matrix}
+\end{figure}
+
+\input{res/tables/corr.tex}
+
+By this selection we removed 42 features, thus, nearly halving the dataset vertically. The adopted criterion is based on logical correlation, thus, by inspecting correlations, the removed features are the ones where we can find a motivation for the correlation, otherwise the correlation can be spurious.
+
+In order to further reduce the dimensionality of the dataset another two tests have been ran: the information gain test and the chi square test, results are shown in \reffig{fig:ig} and \reffig{fig:chi_square}:
+
+\begin{figure}[H]
+    \resizebox{1.1\linewidth}{!}{\includegraphics{res/imgs/ig.pdf}}
+    \label{fig:ig}
+    \caption{Information gain results}
+\end{figure}
+
+\begin{figure}[H]
+    \resizebox{1.1\linewidth}{!}{\includegraphics{res/imgs/chi2.pdf}}
+    \label{fig:chi_square}
+    \caption{Chi square test results} 
+\end{figure}
+
+The results gave another insight on some kind of features uninformative. The features that are strictly related to the specific match and not on the playstyle and skill of the player. Such features are \textit{goals}, \textit{mvp}, \textit{assists} and \textit{goals\_against\_while\_last\_defender}.
