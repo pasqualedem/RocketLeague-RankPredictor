@@ -1,5 +1,7 @@
-experiment: Base Preprocessing -- 22 classes
+experiment: Base Selection -- 22 classes
 models:
+  dummy:
+    strategy: ['uniform', 'most_frequent']
   linear:
     penalty: ['l2']
   naive_bayes:
@@ -8,12 +10,23 @@ models:
     n_estimators: [10, 100]
     criterion: ['gini', 'entropy']
     class_weight: [None, 'balanced']
+    parallelization: [0, 0, 6]
   xgbclassifier:
     n_estimators: [10, 100]
     eta: [0.01, 0.1, 0.2, 0.3]
+    parallelization: [0, 0, 8]
   knn:
-    n_neighbors: [3, 5, 10]
+    n_neighbors: [3]
+    parallelization: [0, 0, 8]
+  mlpclassifier:
+    hidden_layer_sizes: [[128, 64, 32]]
+    alpha: [0,001, 0.0001, 0.00001]
+    batch_size: [256]
+    random_state: [42]
+    verbose: [True]
+    early_stopping: [True]
+    learning_rate_init: [0.01, 0.001]
 
 data:
-  path: 'data/preprocessed/dataset_preprocessed.csv'
+  path: 'data/preprocessed/dataset_selected.csv'
   target: 'tier'

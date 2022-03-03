@@ -20,17 +20,19 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.neural_network import MLPClassifier
 from xgboost import XGBClassifier
-
+from sklearn.dummy import DummyClassifier
 
 ESTIMATORS = {
     'linear': LogisticRegression,
     'naive_bayes': GaussianNB,
     'random_forest': RandomForestClassifier,
     'xgbclassifier': XGBClassifier,
-    'knn': KNeighborsClassifier
+    'knn': KNeighborsClassifier,
+    'mlpclassifier': MLPClassifier,
+    'dummy': DummyClassifier
 }
-
 
 SCORES = {
     'accuracy': accuracy_score,
@@ -39,7 +41,9 @@ SCORES = {
     'recall_macro': lambda *args, **kwargs: recall_score(*args, **kwargs, average='macro'),
 }
 # SCORES = ['accuracy', 'f1_macro', 'precision_macro', 'recall_macro']
-N_JOBS = 10
+VALIDATION_JOBS = 12
+GRID_JOBS = 0
+
 
 def scorer(clf, X, y):
     y_pred = clf.predict(X)
@@ -102,39 +106,61 @@ class Trainer:
 
     def train(self):
         for model in self.grids:
-            print('------------------------------ {} ------------------------------'.format(model))
+            print('---------------------------------------- {} -----------------------------------------'.format(model))
             instance_model = ESTIMATORS[model]()
-            self.grid_search(instance_model, self.grids[model])
+            self.grid_search(model, instance_model, self.grids[model])
 
-    def grid_search(self, model, params):
-        return self.evaluate_grid(model, params)
+    def grid_search(self, model_name, model, params):
+        return self.evaluate_grid(model_name, model, params)
 
-    def evaluate_grid(self, model, params):
+    def evaluate_grid(self, model_name, model, params):
+        if params.get('parallelization'):
+            grid_jobs, val_jobs, alg_jobs = params.pop('parallelization')
+        else:
+            grid_jobs, val_jobs, alg_jobs = GRID_JOBS, VALIDATION_JOBS, None
         grid = ParameterGrid(params)
         runs = list(iter(grid))
 
         def fit_score(model, params):
             print(model, '\t', params)
             run = client.create_run(experiment_id=self.exp_id)
+            client.log_param(run.info.run_id, 'name', model_name)
             client.log_param(run.info.run_id, 'datapath', self.datapath)
             client.log_param(run.info.run_id, 'target', self.target_feature)
             for k, v in params.items():
                 client.log_param(run.info.run_id, k, v)
-            model.set_params(**params)
-            scores = cross_validate(model, self.X, self.y, scoring=scorer, cv=10, return_estimator=True)
+            if alg_jobs:
+                model.set_params(**params, n_jobs=alg_jobs)
+            else:
+                model.set_params(**params)
+            dec_jobs = 0
+            condition = True
+            while condition:
+                jobs = {'n_jobs': val_jobs - dec_jobs} if val_jobs - dec_jobs > 0 else {}
+                try:
+                    print('Validation with {} jobs'.format(val_jobs - dec_jobs))
+                    scores = cross_validate(model, self.X, self.y, scoring=scorer,
+                                            cv=10, return_estimator=True, **jobs)
+                    condition = False
+                except (OSError, MemoryError) as e:
+                    print(e)
+                    print('Insufficent resources')
+                    dec_jobs += 1
+                    condition = VALIDATION_JOBS >= dec_jobs
+
             scores, cm, estimators = parse_scores(scores)
             for key, value in scores.items():
                 client.log_metric(run.info.run_id, key, value=np.mean(value))
-            ax = sns.heatmap(np.mean(cm, axis=0), annot=True, fmt=".2f")
-            sns.set(rc={'figure.figsize': (15, 15)})
+            ax = sns.heatmap(np.mean(cm, axis=0), annot=True, fmt=".1f")
+            ax.figure.set_size_inches(18, 18)
             client.log_figure(run.info.run_id, figure=ax.figure, artifact_file="conf_matrix.png")
 
         client = MlflowClient()
-        if N_JOBS == 0:
+        if grid_jobs == 0:
             for param in runs:
                 fit_score(model, param)
         else:
-            parallel = Parallel(n_jobs=N_JOBS)
+            parallel = Parallel(n_jobs=grid_jobs)
             parallel(delayed(fit_score)(model, param) for param in runs)
 
     def build_dataset(self):
@@ -151,7 +177,7 @@ class Trainer:
         exp_info = MlflowClient().get_experiment_by_name(self.exp_name)
         self.exp_id = exp_info.experiment_id if exp_info else MlflowClient().create_experiment(self.exp_name)
         print('Experiment set')
-        mlflow.sklearn.autolog(max_tuning_runs=None, log_models=True, log_post_training_metrics=True)
+        # mlflow.sklearn.autolog(max_tuning_runs=None, log_models=True, log_post_training_metrics=True)
         print('Autolog on')
 
 
