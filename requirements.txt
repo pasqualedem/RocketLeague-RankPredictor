@@ -11,3 +11,4 @@ tqdm~=4.62.3
 requests~=2.27.1
 ruamel.yaml
 jupyter
+jupyterlab

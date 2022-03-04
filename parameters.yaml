@@ -1,16 +1,16 @@
-experiment: Base Selection -- 22 classes
+experiment: Base Preprocess -- 22 classes
 models:
-  dummy:
-    strategy: ['uniform', 'most_frequent']
-  linear:
-    penalty: ['l2']
-  naive_bayes:
-    var_smoothing: [1e-9]
+#  dummy:
+#    strategy: ['uniform', 'most_frequent']
+#  linear:
+#    penalty: ['l2']
+#  naive_bayes:
+#    var_smoothing: [1e-9]
   random_forest:
     n_estimators: [10, 100]
     criterion: ['gini', 'entropy']
     class_weight: [None, 'balanced']
-    parallelization: [0, 0, 6]
+    parallelization: [0, 0, 2]
   xgbclassifier:
     n_estimators: [10, 100]
     eta: [0.01, 0.1, 0.2, 0.3]
@@ -28,5 +28,5 @@ models:
     learning_rate_init: [0.01, 0.001]
 
 data:
-  path: 'data/preprocessed/dataset_selected.csv'
+  path: 'data/preprocessed/dataset_preprocessed.csv'
   target: 'tier'

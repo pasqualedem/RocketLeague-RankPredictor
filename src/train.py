@@ -146,7 +146,7 @@ class Trainer:
                     print(e)
                     print('Insufficent resources')
                     dec_jobs += 1
-                    condition = VALIDATION_JOBS >= dec_jobs
+                    condition = val_jobs >= dec_jobs
 
             scores, cm, estimators = parse_scores(scores)
             for key, value in scores.items():
