@@ -1,0 +1,52 @@
+\begin{table}[]
+    \scriptsize
+    \center
+    \begin{tabular}{|l|l|l|}
+    \hline
+    \textbf{Deleted feature}   & \textbf{Correlated feature}                         & \textbf{Motivation}                                                                                                        \\ \hline
+    time\_offensive\_half      & time\_offensive\_third                              & trivial                                                                                                                    \\ \hline
+    time\_defensive\_half      & time\_defensive\_third                              & trivial                                                                                                                    \\ \hline
+    time\_behind\_ball         & time\_infront\_ball                                 & trivial                                                                                                                    \\ \hline
+    time\_ground               & time\_low\_air, time\_high\_air                     & sum up to 1                                                                                                                \\ \hline
+    time\_slow\_speed          & time\_boost\_speed, time\_supersonic\_speed         & sum up to 1                                                                                                                \\ \hline
+    time\_most\_back           & time\_most\_forward                                 & trivial                                                                                                                    \\ \hline
+    time\_most\_forward        & time\_infront\_ball                                 & \begin{tabular}[c]{@{}l@{}}player whos most forward is\\ usually infront of the ball\end{tabular}                          \\ \hline
+    percent\_defensive\_half   & percent\_offensive\_half                            & trivial                                                                                                                    \\ \hline
+    percent\_behind\_ball      & percent\_infront\_ball                              & trivial                                                                                                                    \\ \hline
+    avg\_speed                 & percent\_slow\_speed                                & trivial                                                                                                                    \\ \hline
+    percent\_ground            & percent\_low\_air, percent\_high\_air               & sum up to 1                                                                                                                \\ \hline
+    time\_farthest\_from\_ball & time\_defensive\_third                              & \begin{tabular}[c]{@{}l@{}}defender is most of the\\ time farthest from ball\end{tabular}                                  \\ \hline
+    percent\_boost\_75\_100    & percent\_boost\_X\_Y                                & sum up to 1                                                                                                                \\ \hline
+    time\_boost\_0\_25         & percent\_boost\_0\_25                               & trivial                                                                                                                    \\ \hline
+    time\_boost\_25\_50        & percent\_boost\_25\_50                              & trivial                                                                                                                    \\ \hline
+    time\_boost\_50\_75        & percent\_boost\_50\_75                              & trivial                                                                                                                    \\ \hline
+    time\_boost\_75\_100       & percent\_boost\_75\_100                             & trivial                                                                                                                    \\ \hline
+    time\_defensive\_third     & percent\_defensive\_third                           & trivial                                                                                                                    \\ \hline
+    time\_offensive\_third     & percent\_offensive\_third                           & trivial                                                                                                                    \\ \hline
+    percent\_offensive\_half   & percent\_offensive\_third                           & Third is more specific than half                                                                                           \\ \hline
+    percent\_defensive\_half   & percent\_offensive\_third                           & Third is more specific than half                                                                                           \\ \hline
+    percent\_defensive\_third  & percent\_offensive\_third   percent\_neutral\_third & sum up to 1                                                                                                                \\ \hline
+    percent\_slow\_speed       & percent\_boost\_speed                               & sum up to 1                                                                                                                \\ \hline
+    avg\_amount                & percent\_boost                                      & trivial                                                                                                                    \\ \hline
+    avg\_speed\_percentage     & avg\_speed                                          & trivial                                                                                                                    \\ \hline
+    time\_defensive\_half      & percent\_defensive\_half                            & trivial                                                                                                                    \\ \hline
+    time\_offensive\_half      & percent\_offensive\_half                            & trivial                                                                                                                    \\ \hline
+    count\_collected\_big      & amount\_collected\_big                              & trivial                                                                                                                    \\ \hline
+    count\_collected\_small    & amount\_collected\_small                            & trivial                                                                                                                    \\ \hline
+    count\_stolen\_big         & amount\_stolen\_big                                 & trivial                                                                                                                    \\ \hline
+    count\_stolen\_small       & amount\_stolen\_small                               & trivial                                                                                                                    \\ \hline
+    time\_low\_air             & time\_boost\_speed                                  & \begin{tabular}[c]{@{}l@{}}When jumping in low air\\ players usually use boost\end{tabular}                                \\ \hline
+    time\_high\_air            & percent\_high\_air                                  & trivial                                                                                                                    \\ \hline
+    time\_supersonic\_speed    & percent\_supersonic\_speed                          & trivial                                                                                                                    \\ \hline
+    time\_zero\_boost          & percent\_zero\_boost                                & trivial                                                                                                                    \\ \hline
+    time\_full\_boost          & percent\_full\_boost                                & trivial                                                                                                                    \\ \hline
+    amount\_stolen             & amount\_stolen\_big                                 & trivial                                                                                                                    \\ \hline
+    amount\_collected          & amount\_collected\_big                              & trivial                                                                                                                    \\ \hline
+    avg\_distance\_to\_ball    & avg\_distance\_to\_ball\_possession                 & \begin{tabular}[c]{@{}l@{}}avg\_distance\_to\_ball is more general\\ than avg\_distance\_to\_ball\_possession\end{tabular} \\ \hline
+    total\_distance            & time\_boost\_speed                                  & The fast player is the more it travels                                                                                     \\ \hline
+    time\_powerslide           & count\_powerslide                                   & trivial                                                                                                                    \\ \hline
+    bcpm                       & bpm                                                 & \begin{tabular}[c]{@{}l@{}}Boost consumption is directly\\ connected to boost usage\end{tabular}                           \\ \hline
+    \end{tabular}
+    \caption{List of deleted features and the correlated ones}
+    \label{tab:corr_features}
+    \end{table}

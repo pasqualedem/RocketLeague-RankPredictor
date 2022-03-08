@@ -100,3 +100,20 @@ In order to further reduce the dimensionality of the dataset another two tests h
 \end{figure}
 
 The results gave another insight on some kind of features uninformative. The features that are strictly related to the specific match and not on the playstyle and skill of the player. Such features are \textit{goals}, \textit{mvp}, \textit{assists} and \textit{goals\_against\_while\_last\_defender}.
+
+\subsection{Data construction}
+
+In this step there will be gonna built the final dataset provided to the models.
+
+Features of this dataset have different measurement units and scales, therefore features with bigger scales will be considered more important for some models, for example linear regression. We need to scale the data.
+The used scaling technique is called \textit{Robust Scaling}. It subtract the median and divides using the \textit{interquantile range (IQR)} instead of the mean and the standard deviation differently from normalization. It has been used the IQR between the 1st quartile (25th quantile) and the 3rd quartile (75th quantile).
+This procedure has been applied to all the features except for some groups that needed particular attention.
+The first groups are the \textbf{percentual} features, they range from 0 to 100, therefore the normalization is useless; they have been simply divided by 100 to make them range from 0 to 1. 
+
+Other groups are:
+\begin{itemize}
+    \item \textit{avg\_distances}: which includes distance to ball with and without possession and distance to mates
+    \item \textit{overfill}: which includes amount of boost overfill, amount overfill stolen and stolen with big pads
+\end{itemize}
+
+These groups of features have relations and constraints that can be removed by the normalization, for example amount\_overfill is always greater than amount\_overfill\_stolen, and their difference is important. Therefore, each group, has been standardized like it is a unique features, in order to keep the relations

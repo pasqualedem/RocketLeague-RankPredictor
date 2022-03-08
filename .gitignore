@@ -1003,3 +1003,5 @@ FodyWeavers.xsd
 
 data
 mlruns
+.idea
+.stignore
