@@ -82,8 +82,9 @@ def parse_scores(scores):
         coo_matrix((data[:, k], (rows, cols)), shape=(shape, shape)).toarray()
         for k in range(data.shape[1])
     ]
-
-    return clean_scores, cms, estimators
+    cm = np.mean(cms, axis=0)
+    cm /= np.sum(cm)
+    return clean_scores, cm, estimators
 
 
 class Trainer:
@@ -151,7 +152,7 @@ class Trainer:
             scores, cm, estimators = parse_scores(scores)
             for key, value in scores.items():
                 client.log_metric(run.info.run_id, key, value=np.mean(value))
-            ax = sns.heatmap(np.mean(cm, axis=0), annot=True, fmt=".1f")
+            ax = sns.heatmap(cm, annot=True, fmt=".1f")
             ax.figure.set_size_inches(18, 18)
             client.log_figure(run.info.run_id, figure=ax.figure, artifact_file="conf_matrix.png")
 

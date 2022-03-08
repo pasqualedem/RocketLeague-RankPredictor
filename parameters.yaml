@@ -1,11 +1,11 @@
-experiment: Base Preprocess -- 22 classes
+experiment: Normal Preprocess -- 8 classes
 models:
-#  dummy:
-#    strategy: ['uniform', 'most_frequent']
-#  linear:
-#    penalty: ['l2']
-#  naive_bayes:
-#    var_smoothing: [1e-9]
+  dummy:
+    strategy: ['uniform', 'most_frequent']
+  linear:
+    penalty: ['l2']
+  naive_bayes:
+    var_smoothing: [1e-9]
   random_forest:
     n_estimators: [10, 100]
     criterion: ['gini', 'entropy']
@@ -28,5 +28,5 @@ models:
     learning_rate_init: [0.01, 0.001]
 
 data:
-  path: 'data/preprocessed/dataset_preprocessed.csv'
+  path: 'data/preprocessed/dataset_normal_merged.csv'
   target: 'tier'

@@ -7,6 +7,10 @@ import json
 
 from tqdm import tqdm
 
+import numpy as np
+import seaborn as sns
+import pandas as pd
+
 TFORMAT = "%Y-%m-%dT%H:%M:%SZ"
 
 
@@ -103,3 +107,19 @@ def mlflow_server():
     child = subprocess.Popen(
         cmd, env=cmd_env, universal_newlines=True, stdin=subprocess.PIPE,
     )
+    
+    
+def calculate_plot_bar(data, name, value_name=None, rotation=0):
+    labels, counts = np.unique(data[name], return_counts=True)
+    labels = list(map(lambda x: str(x), labels))
+    source = pd.DataFrame({name: labels, 'counts': counts})
+    plot_bar(source, name, value_name=value_name, rotation=rotation)
+
+def plot_bar(data, name, value_name=None, rotation=0):
+    if value_name is None:
+        value_name = 'counts'
+    ax = sns.barplot(x=name, y=value_name, data=data)
+    sns.set(rc={'figure.figsize':(15,15)})
+    ax.bar_label(ax.containers[0])
+    plt.xticks(rotation=rotation)
+    plt.show()
