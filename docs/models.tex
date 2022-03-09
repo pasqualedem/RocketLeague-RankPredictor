@@ -1,0 +1,25 @@
+\section{Modeling}
+
+In this phase, data mining models are chosen and an evaluation plan is designed. After that, models are built, trained and evaluated.
+\subsection{Select modeling technique}
+
+According to \refseq{sec:min_goal}, our task is multiclass classification, thus \textit{supervised learning}. Also, we have to consider that we have numerical features. From the plethora of models we firstly chose Logistic Regression, according to Occam razor, always start from simpler models. Then we select others that from literature, are known as accurate models, such as, Naive Bayes, k-Nearest Neighbors, Random forest, XGBoost and Multi Layer Perceptron. 
+In particulat, for Naive Bayes, it was used the Gaussian Naive Bayes, suitable for numeric features.
+
+
+\subsection{Generate Test Design}
+
+After selecting the models, it is crucial to chose appropriate technique for assessing the performances of the models.
+
+\subsubsection{Metrics}
+
+First of all, we need to chose the metrics to calculate the performances. In this case, having a multiclass classification, we can use Accuracy, Precision and Recall. Despite having a imbalanced dataset, since we have up to 22 classes, and the most frequent class has 11\% of total instances, we could still use accuracy has a metric since most frequent classifier would reach 0.11 accuracy. However, F1-score macro averaged will be used too. 
+About cost of errors, there is no motivation to weight more a kind of error over another, thus, we simply calculate metrics as usual. 
+
+\subsubsection{Evaluation technique}
+
+As evaluation technique K-fold cross validation is chosen, with K=10, as is a popular number of folds in literature.
+For each fold, having 404951 rows, means that we will train on 364456 examples and test on 40495.
+\note{Maybe holdout on models?}
+
+\subsection{Build model}
