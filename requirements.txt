@@ -12,3 +12,4 @@ requests~=2.27.1
 ruamel.yaml
 jupyter
 jupyterlab
+factor_analyzer

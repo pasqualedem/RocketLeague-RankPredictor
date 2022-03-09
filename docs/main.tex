@@ -25,6 +25,7 @@
 \usepackage{multirow}
 \usepackage{multicol}
 \usepackage{longtable}
+\usepackage{listings}
 
 \usepackage{textcomp}
 \usepackage{listings}
@@ -45,6 +46,7 @@
 \newcommand{\refseq}[1]{\hyperref[#1]{section \ref*{#1}}}
 \newcommand{\reftab}[1]{\hyperref[#1]{table \ref*{#1}}}
 \newcommand{\reffig}[1]{\hyperref[#1]{figure \ref*{#1}}}
+\newcommand{\reflst}[1]{\hyperref[#1]{listing \ref*{#1}}}
 \newcommand{\refcode}[1]{\hyperref[#1]{(Code to test it)}}
 \newcommand{\note}[1]{\textbf{\textcolor{blue}{{NOTE: #1}}}}
 
@@ -67,6 +69,9 @@ This case study deals with the practical application of the Cross Industry Stand
 This documentation will follow the six phases of CRISP-DM, thus in each section, a phase will be described, however the process is iterative, therefore it will anticipate in each section analysis that can be chronologically distant.
 \input{business}
 \input{data}
+\input{models}
+
+\note{Maybe short descr of models}
 
 \newpage
 \bibliography{sample}

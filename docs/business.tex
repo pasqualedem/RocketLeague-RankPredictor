@@ -73,7 +73,7 @@ Our business objectives are, therefore two:
 This work will result in a system able to measure the skill shown in a match for each player, and in a categorization useful to analyze the play styles.
 
 \subsection{Determine Data Mining Goals}
-
+\label{sec:min_goal}
 The first goal is a classification/regression task. It is important to establish the granularity of the output. It is impossible to carefully determine each Division as they can change from a match to another, therefore the minimum granularity is the rank; however we still have 22 classes, that is quite high for a classification task. Thus, we could increase granularity by considering only the ranks without levels e.g. Silver instead of Silver II. We can see also this task as regression, as we can predict the MMR. We could also predict the MMR and then discretize into ranks.
 
 The criteria will be based on accuracy and F1 score, we will accept an accuracy higher than 0.7.

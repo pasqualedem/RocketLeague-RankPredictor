@@ -117,3 +117,57 @@ Other groups are:
 \end{itemize}
 
 These groups of features have relations and constraints that can be removed by the normalization, for example amount\_overfill is always greater than amount\_overfill\_stolen, and their difference is important. Therefore, each group, has been standardized like it is a unique features, in order to keep the relations
+
+
+\subsubsection{Factor analysis}
+
+Factor analysis is a linear statistical model. It is used to explain the variance among the observed variable and condense a set of the observed variable into the unobserved variable called factors. Observed variables are modeled as a linear combination of factors and error terms (Source). Factor or latent variable is associated with multiple observed variables, who have common patterns of responses. Each factor explains a particular amount of variance in the observed variables. It helps in data interpretations by reducing the number of variables.
+Factor Analysis addresses the problem of analyzing the structure of the interrelationships, among a large number of variables by defining a set of common underlying dimensions, known as \textbf{factors}. In this case, the analysis is suitable, and could improve the final metrics of the classifiers.
+
+Firstly, it is ran a statistical test, the \textbf{Bartlett test of Sphericity}; the result of the \textit{p-value} is 0.0, which is below the significance level, that is 0.01, this means that our data is suitable for PCA or factor analysis, in other terms, the correlation matrix is not an identity matrix, therefore there are variables that can be compressed because are correlated.
+After that, it another statistical test, the \textbf{Kaiser-Meyer-Olin} test. KMO estimates the proportion of variance among all the observed variables. Lower proportion is more suitable for factor analysis. KMO values range between 0 and 1. Value of KMO less than 0.6 is considered inadequate. The resulting value is 0.74, which is not excellent but still good to perform factor analysis.
+
+The next step is choosing the number of factors, it is possible to use the Kaiser criterion or the scree plot.
+
+\begin{lstlisting}[caption=Eigenvalues vector, label=lst:eig, numbers=none]
+    8.23560479, 4.23322434, 3.22683551, 2.81685919, 2.30287244,
+    1.89468945, 1.77176288, 1.32000825, 1.24627339, 1.00624468,
+    0.96403381, 0.92449632, 0.84269987, 0.82747457, 0.77226586,
+    0.76199741, 0.69723765, 0.69105217, 0.67808479, 0.60368556,
+    0.59190556, 0.57496769, 0.51825302, 0.46937353, 0.37548574,
+    0.34613834, 0.32115293, 0.3107348 , 0.27012021, 0.2462839 ,
+    0.22761797, 0.18568548, 0.1833516 , 0.14390633, 0.12192532,
+    0.11567416, 0.08087169, 0.03868107, 0.02639674, 0.02272699,
+    0.01134398
+\end{lstlisting}
+
+We can see \reflst{lst:eig}, that there are only 8 values above 1.
+
+\begin{figure}[H]
+    \resizebox{1.1\linewidth}{!}{\includegraphics{res/imgs/scree.pdf}}
+    \label{fig:scree}
+    \caption{Scree plot} 
+\end{figure}
+
+Also from the scree plot \reffig{fig:scree}, the elbow is around 8, so we can state the 8 factors should be adequate.
+So we perform the factor analysis and print the \textit{factor loadings} \reffig{fig:loadings}.
+
+\begin{figure}[H]
+    \resizebox{1.1\linewidth}{!}{\includegraphics{res/imgs/loadings.png}}
+    \label{fig:loadings}
+    \caption{Loadings for each factor that are greater than 0.5 in absolute value} 
+\end{figure}
+
+For sure we can say that variable in factor 6 and 7 are related and variables in factor 3 are all percentage of boost. For factor 5 and 2, we have two groups of related variables. Variables in factor 4 are all amount of boosts. Lastly, for factors 0 and 1 there are some related variables, but others doesn't have a clear interpretation of their relations.
+
+\subsection{Final produced datasets}
+
+From the preparation phase we produced 5 datasets:
+
+\begin{itemize}
+    \item Dataset selected: output of feature selection, without preprocessing
+    \item Dataset preprocessed: the dataset produced by scaling;
+    \item Dataset grouped preprocessed: the dataset produced by scaling done with grouping some variables;
+    \item Dataset merged preprocessed: the dataset produced by scaling and merging the tier classes;
+    \item Dataset merged factored: the dataset produced by merging the tier classes and performing a factor analysis
+\end{itemize}
