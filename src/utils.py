@@ -4,7 +4,9 @@ import subprocess
 import time
 import datetime
 import json
+import uuid
 
+from matplotlib import pyplot as plt
 from tqdm import tqdm
 
 import numpy as np
@@ -107,19 +109,46 @@ def mlflow_server():
     child = subprocess.Popen(
         cmd, env=cmd_env, universal_newlines=True, stdin=subprocess.PIPE,
     )
-    
-    
+
+
+def log_matrix_artifact(client, run, matrix, name):
+    tmp = TempFile(name)
+    pd.DataFrame(matrix).to_csv(tmp.f)
+    tmp.close()
+    client.log_artifact(run.info.run_id, tmp.path)
+    tmp.delete()
+
+
 def calculate_plot_bar(data, name, value_name=None, rotation=0):
     labels, counts = np.unique(data[name], return_counts=True)
     labels = list(map(lambda x: str(x), labels))
     source = pd.DataFrame({name: labels, 'counts': counts})
     plot_bar(source, name, value_name=value_name, rotation=rotation)
 
+
 def plot_bar(data, name, value_name=None, rotation=0):
     if value_name is None:
         value_name = 'counts'
     ax = sns.barplot(x=name, y=value_name, data=data)
-    sns.set(rc={'figure.figsize':(15,15)})
+    sns.set(rc={'figure.figsize': (15, 15)})
     ax.bar_label(ax.containers[0])
     plt.xticks(rotation=rotation)
     plt.show()
+
+
+class TempFile:
+    def __init__(self, name=None):
+        if name:
+            self.path = name
+        else:
+            self.path = str(uuid.uuid4())
+        self.f = open(self.path, 'w')
+
+    def write(self, lines):
+        self.f.write(lines)
+
+    def close(self):
+        self.f.close()
+
+    def delete(self):
+        os.remove(self.path)
