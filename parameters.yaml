@@ -1,4 +1,4 @@
-experiment: Factor Preprocess -- 8 classes
+experiment: Basic Preprocess -- 22 classes
 models:
   dummy:
     strategy: ['uniform', 'most_frequent']
@@ -28,5 +28,5 @@ models:
     learning_rate_init: [0.01, 0.001]
 
 data:
-  path: 'data/preprocessed/dataset_factored.csv'
+  path: 'data/preprocessed/dataset_selected.csv'
   target: 'tier'

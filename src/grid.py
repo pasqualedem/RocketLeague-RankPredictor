@@ -83,6 +83,8 @@ class Evaluator:
         self.client.log_param(run.info.run_id, 'datapath', self.datapath)
         self.client.log_param(run.info.run_id, 'target', self.target_feature)
         self.client.log_param(run.info.run_id, 'type', "test")
+        for k, v in params.items():
+            self.client.log_param(run.info.run_id, k, v)
 
         model.set_params(**params)
         model.fit(self.X_train, self.y_train)
