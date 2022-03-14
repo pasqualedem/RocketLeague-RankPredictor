@@ -18,8 +18,42 @@ About cost of errors, there is no motivation to weight more a kind of error over
 
 \subsubsection{Evaluation technique}
 
-As evaluation technique K-fold cross validation is chosen, with K=10, as is a popular number of folds in literature.
-For each fold, having 404951 rows, means that we will train on 364456 examples and test on 40495.
-\note{Maybe holdout on models?}
+The dataset is firstly split into training and test, 2/3 for the training and 1/3 for the test, so the method used is the \textit{holdout}. 
+As validation technique, K-fold cross validation is chosen for parameter selection, with K=10, as is a popular number of folds in literature.
+Thus, for each model, after the best parameters have been found, it is retrained on the whole training set and then tested.
+Having 404951 rows, means that we will train on 269968 examples and test on 269967. In the validation, each fold will be of 13498 samples.
 
 \subsection{Build model}
+
+In this section there will be reported the results for each model, and each preprocessed dataset.
+Note that hyperparameter selection has been performed incrementally, starting from a reduced set, and incrementally expanded basing on the fit / prediction time and the given performances. 
+Thus, we can say that we followed a manual greedy search of the hyperparameters.
+
+\note{}
+We start from the dataset not preprocessed, rule based models, like Random Forests, should not suffer from scale difference between features, so it could make sense to try to build models without preprocessing.
+
+\subsubsection{Dummy Classifier}
+
+A random classifier has been tested to check the gain of the other classifiers. Two strategy have been applied: \textbf{Most Frequent} and \textbf{Uniform sampling}. Results in \reftab{tab:val_dummy}.
+Note that results on different preprocessing are obviously the same, they can change only by grouping classes.
+
+\input{res/tables/val_tables/dummy.tex}
+
+\subsubsection{KNN Classifier}
+
+K-Nearest Neighbors classifier, with K=3. Results in \reftab{tab:val_knn}
+
+\input{res/tables/val_tables/knn.tex}
+
+\textbf{Linear classifier}
+
+Logistic regression with L2 penalty. Attempt to fit a simple model for this task. Results in \reftab{tab:nopre_val_linear}
+
+\input{res/tables/val_tables/noprep_linear.tex}
+
+
+\textbf{Multi Layer Perceptron}
+
+MLP classifier, with batch size of 256 and 3 hidden layers, the first with 256 units, the second with 128 and the last with 64. Results in \reftab{tab:nopre_val_mlp}
+
+\input{res/tables/val_tables/noprep_mlp.tex}

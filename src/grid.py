@@ -6,8 +6,7 @@ import seaborn as sns
 from joblib import Parallel, delayed
 from mlflow.tracking import MlflowClient
 from scipy.sparse import coo_matrix
-from sklearn.metrics import confusion_matrix, accuracy_score,\
-    f1_score, precision_score, recall_score, roc_auc_score, roc_curve
+from sklearn.metrics import mean_absolute_error, mean_squared_error
 from sklearn.model_selection import ParameterGrid, cross_validate, train_test_split
 from ast import literal_eval
 
@@ -18,16 +17,14 @@ GRID_JOBS = 0
 RANDOM_STATE = 42
 
 SCORES = {
-    'accuracy': accuracy_score,
-    'f1_macro': lambda *args, **kwargs: f1_score(*args, **kwargs, average='macro'),
-    'precision_macro': lambda *args, **kwargs: precision_score(*args, **kwargs, average='macro'),
-    'recall_macro': lambda *args, **kwargs: recall_score(*args, **kwargs, average='macro'),
+    'mae': mean_absolute_error,
+    'rmse': lambda *args, **kwargs: mean_squared_error(*args, **kwargs, squared=False),
 }
 # METRICS = {
 #     'roc_auc': lambda *args, **kwargs: roc_auc_score(args, **kwargs, multi_class='ovr'),
 # }
 
-LEAD_METRIC = 'f1_macro'
+LEAD_METRIC = 'rmse'
 
 
 def scorer(clf, X, y):
@@ -49,18 +46,18 @@ def parse_scores(scores):
             cm_dict[index] = v
         except ValueError:
             clean_scores[k] = v
-    indices = np.array(list(cm_dict.keys()))
-    rows, cols = indices[:, 0], indices[:, 1]
-    data = np.array(list(cm_dict.values()))
-    print(rows.shape, cols.shape, data.shape)
-    shape = int(np.sqrt(cols.shape[0]))
-    cms = [
-        coo_matrix((data[:, k], (rows, cols)), shape=(shape, shape)).toarray()
-        for k in range(data.shape[1])
-    ]
-    cm = np.mean(cms, axis=0)
-    cm /= np.sum(cm)
-    return clean_scores, cm
+    # indices = np.array(list(cm_dict.keys()))
+    # rows, cols = indices[:, 0], indices[:, 1]
+    # data = np.array(list(cm_dict.values()))
+    # print(rows.shape, cols.shape, data.shape)
+    # shape = int(np.sqrt(cols.shape[0]))
+    # cms = [
+    #     coo_matrix((data[:, k], (rows, cols)), shape=(shape, shape)).toarray()
+    #     for k in range(data.shape[1])
+    # ]
+    # cm = np.mean(cms, axis=0)
+    # cm /= np.sum(cm)
+    return clean_scores  # , cm
 
 
 class Evaluator:
@@ -96,17 +93,15 @@ class Evaluator:
         scores = {'test_' + score: fun(self.y_test, predicts) for score, fun in SCORES.items()}
         for key, value in scores.items():
             self.client.log_metric(run.info.run_id, key, value)
-        cm = confusion_matrix(self.y_test, predicts)
+        # cm = confusion_matrix(self.y_test, predicts)
         # metrics = {metric: fun(self.y_test, predicts) for metric, fun in METRICS.items()}
         # self.client.log_metric(run.info.run_id, 'auc', metrics['auc'])
         # log_matrix_artifact(self.client, run, metrics['roc_auc'], 'roc')
 
-        ax = sns.heatmap(cm, annot=True, fmt=".1f")
-        ax.figure.set_size_inches(18, 18)
-        self.client.log_figure(run.info.run_id, figure=ax.figure, artifact_file="conf_matrix.png")
-        log_matrix_artifact(self.client, run, cm, 'confusion_matrix.csv')
-
-        return scores, cm
+        # ax = sns.heatmap(cm, annot=True, fmt=".1f")
+        # ax.figure.set_size_inches(18, 18)
+        # self.client.log_figure(run.info.run_id, figure=ax.figure, artifact_file="conf_matrix.png")
+        # log_matrix_artifact(self.client, run, cm, 'confusion_matrix.csv')
 
 
 class GridSearch:

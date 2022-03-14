@@ -1,22 +1,22 @@
-experiment: Basic Preprocess -- 22 classes
+experiment: Group Preproces
 models:
   dummy:
-    strategy: ['uniform', 'most_frequent']
+    strategy: ['mean', 'median']
   linear:
-    penalty: ['l2']
+    fit_intercept: [True]
   naive_bayes:
+    priors: [None, [0.0011, 0.0014, 0.0015, 0.0041, 0.0105, 0.0145, 0.0233, 0.0488, 0.0602, 0.0402, 0.07, 0.0708, 0.0408, 0.0704, 0.0727, 0.053, 0.0708, 0.0555, 0.0928, 0.117 , 0.0653, 0.0153]]
     var_smoothing: [1e-9]
   random_forest:
     n_estimators: [10, 100]
-    criterion: ['gini', 'entropy']
-    class_weight: [None, 'balanced']
+    criterion: ['squared_error', 'poisson']
     parallelization: [0, 0, 2]
   xgbclassifier:
     n_estimators: [10, 100]
-    eta: [0.01, 0.1, 0.2, 0.3]
+    importance_type: ['gain', 'cover', 'weight']
     parallelization: [0, 0, 8]
   knn:
-    n_neighbors: [3]
+    n_neighbors: [3, 5]
     parallelization: [0, 0, 8]
   mlpclassifier:
     hidden_layer_sizes: [[128, 64, 32]]
@@ -28,5 +28,5 @@ models:
     learning_rate_init: [0.01, 0.001]
 
 data:
-  path: 'data/preprocessed/dataset_selected.csv'
+  path: 'data/preprocessed/dataset_preprocessed.csv'
   target: 'tier'

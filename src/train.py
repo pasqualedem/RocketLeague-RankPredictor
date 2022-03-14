@@ -4,24 +4,24 @@ import mlflow
 from ruamel.yaml import YAML
 from mlflow.tracking import MlflowClient
 from utils import mlflow_server
-from grid import GridSearch, Evaluator
+from grid import Evaluator
 
-from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LinearRegression
 from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.neural_network import MLPClassifier
-from xgboost import XGBClassifier
-from sklearn.dummy import DummyClassifier
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.neural_network import MLPRegressor
+from xgboost import XGBRegressor
+from sklearn.dummy import DummyRegressor
 
 ESTIMATORS = {
-    'linear': LogisticRegression,
+    'linear': LinearRegression,
     'naive_bayes': GaussianNB,
     'random_forest': RandomForestClassifier,
-    'xgbclassifier': XGBClassifier,
-    'knn': KNeighborsClassifier,
-    'mlpclassifier': MLPClassifier,
-    'dummy': DummyClassifier
+    'xgb': XGBRegressor,
+    'knn': KNeighborsRegressor,
+    'mlpclassifier': MLPRegressor,
+    'dummy': DummyRegressor
 }
 
 
