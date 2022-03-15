@@ -8,7 +8,7 @@ from grid import Evaluator
 
 from sklearn.linear_model import LinearRegression
 from sklearn.naive_bayes import GaussianNB
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.neural_network import MLPRegressor
 from xgboost import XGBRegressor
@@ -17,10 +17,10 @@ from sklearn.dummy import DummyRegressor
 ESTIMATORS = {
     'linear': LinearRegression,
     'naive_bayes': GaussianNB,
-    'random_forest': RandomForestClassifier,
+    'random_forest': RandomForestRegressor,
     'xgb': XGBRegressor,
     'knn': KNeighborsRegressor,
-    'mlpclassifier': MLPRegressor,
+    'mlp': MLPRegressor,
     'dummy': DummyRegressor
 }
 
