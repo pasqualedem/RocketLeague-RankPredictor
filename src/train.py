@@ -43,16 +43,18 @@ class Trainer:
         self.grids = None
         self.datapath = None
         self.target_feature = None
+        self.validate = None
         self.parse_grids(param_path)
         self.build_dataset()
         self.setup_mlflow()
-        self.evluator = Evaluator(self.exp_id, self.datapath, self.target_feature, self.X, self.y)
+        self.evluator = Evaluator(self.exp_id, self.datapath, self.target_feature, self.validate, self.X, self.y)
 
     def parse_grids(self, param_path):
         with open(param_path, 'r') as param_stream:
             params = YAML().load(param_stream)
         self.datapath = params['data']['path']
         self.target_feature = params['data']['target']
+        self.validate = params['validation']
         self.grids = {model: parse_parameters(parameters) for model, parameters in params['models'].items()}
         self.exp_name = params['experiment']
 
