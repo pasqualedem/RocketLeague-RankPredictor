@@ -19,17 +19,42 @@ models:
 #  knn:
 #    n_neighbors: [3, 5]
 #    parallelization: [0, 0, 8]
+#  mlp:
+#    hidden_layer_sizes: [[128, 64, 32]]
+#    alpha: [0.001, 0.0001, 0.00001]
+#    batch_size: [256]
+#    random_state: [42]
+#    verbose: [True]
+#    early_stopping: [True]
+#    learning_rate_init: [0.01, 0.001]
+
+  dummy:
+    strategy: ['mean']
+  linear:
+    fit_intercept: [True]
+  naive_bayes:
+    priors: [None]
+    var_smoothing: [1e-9]
+  random_forest:
+    n_estimators: [100]
+    criterion: ['squared_error']
+    parallelization: [0, 0, 8]
+  xgb:
+    n_estimators: [100]
+    importance_type: ['weight']
+    parallelization: [0, 0, 8]
+  knn:
+    n_neighbors: [5]
+    parallelization: [0, 0, 8]
   mlp:
     hidden_layer_sizes: [[128, 64, 32]]
-    # alpha: [0.001, 0.0001, 0.00001]
     alpha: [0.001]
     batch_size: [256]
     random_state: [42]
     verbose: [True]
     early_stopping: [True]
-    # learning_rate_init: [0.01, 0.001]
     learning_rate_init: [0.001]
 
 data:
-  path: 'data/preprocessed/dataset_factored.csv'
+  path: 'data/preprocessed/dataset_normal_preprocessed.csv'
   target: 'tier'
