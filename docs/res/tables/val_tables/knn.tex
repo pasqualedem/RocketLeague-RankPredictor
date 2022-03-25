@@ -1,0 +1,18 @@
+\begin{table}[H]
+    \centering
+    \begin{tabular}{l|lllll}
+    \toprule
+    \textbf{preprocess} & \textbf{n° neighbors} & \textbf{fit time} & \textbf{score time} & \textbf{MAE} & \textbf{RMSE} \\ \midrule
+    \multirow{2}{*}{normal}     & 5 & 0.0596 & 256.0697 & 2.1037 & \textbf{2.7212} \\
+                                & 3 & 0.0536 & 235.6941 & 2.1987 & 2.8566          \\
+                                \midrule
+    \multirow{2}{*}{grouped}    & 5 & 0.0585 & 253.4615 & 2.1245 & 2.746           \\
+                                & 3 & 0.0579 & 232.959  & 2.2201 & 2.8845          \\
+                                \midrule
+    \multirow{2}{*}{factored}   & 5 & 0.4768 & 6.0232   & 2.1717 & 2.8005          \\
+                                & 3 & 0.4712 & 5.9163   & 2.2761 & 2.9521          \\
+    \bottomrule     
+    \end{tabular}
+    \caption{Validation results of KNN classifier}
+    \label{tab:val_knn}
+    \end{table}

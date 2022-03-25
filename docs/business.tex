@@ -70,12 +70,13 @@ Our business objectives are, therefore two:
 \end{itemize}
 \input{res/tables/mmrs}
 
-This work will result in a system able to measure the skill shown in a match for each player, and in a categorization useful to analyze the play styles.
+This work will result in a system able to measure the skill shown in a match for each player in a "short" amount of time, in order to be implemented in a real system. Also, another system will be built to produce a categorization useful to analyze the play styles.
 
 \subsection{Determine Data Mining Goals}
 \label{sec:min_goal}
-The first goal is a classification/regression task. It is important to establish the granularity of the output. It is impossible to carefully determine each Division as they can change from a match to another, therefore the minimum granularity is the rank; however we still have 22 classes, that is quite high for a classification task. Thus, we could increase granularity by considering only the ranks without levels e.g. Silver instead of Silver II. We can see also this task as regression, as we can predict the MMR. We could also predict the MMR and then discretize into ranks.
+The first goal is a classification/regression task. There are 22 ranks, or we can possibly group by in 8, (bronze, silver, gold, platinum, diamond, champion, grand champion, SSL), therefore, it could a classification task. On the other hand we would lose the natural ordering of the classes, 
 
-The criteria will be based on accuracy and F1 score, we will accept an accuracy higher than 0.7.
+The criteria will be based on RMSE and MAE, it will be accepted a MAE inferior to 2.0 and a RMSE inferior to 2.5. 
+Another criteria is the inference time, that should be less than 0.5 seconds, measured on a CPU AMD Ryzen 2600x.
 
 The second goal is a clustering task. In this case the success criteria is qualitative, the objective is to define a categorization of play styles, therefore if the recognized clusters and centroids have a significant meaning we can consider the task fulfilled.

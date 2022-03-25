@@ -1,0 +1,14 @@
+% Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{l|llll}
+    \toprule
+    \textbf{strategy} & \textbf{fit time} & \textbf{score time} & \textbf{MAE} & \textbf{RMSE} \\ \midrule
+    median            & 0.1383            & 0.0047              & 3.8826       & 4.5579  \\
+    mean              & 0.1469            & 0.0026              & 3.9039       & 4.5510  \\
+    \bottomrule
+    \end{tabular}%
+    \caption{Validation results of the dummy regressor}
+    \label{tab:val_dummy}
+    \end{table}

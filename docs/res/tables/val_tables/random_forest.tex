@@ -1,0 +1,24 @@
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lll|llll}
+    \toprule
+    \textbf{preprocess} & \textbf{criterion} & \textbf{n° estimators} & \textbf{fit time} & \textbf{score time} & \textbf{MAE} & \textbf{RMSE} \\ \midrule
+    \multirow{4}{*}{normal}     & poisson       & 100 & 2375.7 & 0.7736  & 2.281           & 3.0503 \\
+                                & poisson       & 10  & 298.89 & 0.1124  & 2.3585          & 3.1484 \\
+                                & squared error & 100 & 149.54 & 0.2951  & \textbf{1.6597} & 2.1611 \\
+                                & squared error & 10  & 18.873 & 0.0483  & 1.7472          & 2.2769 \\
+                                \midrule
+    \multirow{4}{*}{grouped}    & poisson       & 100 & 5853.4 & 1.8964  & 2.2811          & 3.0503 \\
+                                & poisson       & 10  & 582.26 & 0.2023  & 2.3608          & 3.1499 \\
+                                & squared error & 100 & 378.69 & 0.5909  & \textbf{1.6603} & 2.1624 \\
+                                & squared error & 10  & 39.668 & 0.0742  & 1.7486          & 2.2814 \\
+                                \midrule
+    \multirow{4}{*}{factored}   & poisson       & 100 & 778.53 & 0.7561  & 2.3259          & 3.0673 \\
+                                & poisson       & 10  & 98.381 & 0.1049  & 2.4045          & 3.166  \\
+                                & squared error & 100 & 53.13  & 0.2947  & \textbf{1.9749} & 2.5454 \\
+                                & squared error & 10  & 7.0736 & 0.0485  & 2.0652          & 2.6674 \\
+    \bottomrule
+    \end{tabular}
+    \caption{Validation results of Random Forest regressor}
+    \label{tab:val_rf}
+\end{table}

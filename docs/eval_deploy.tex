@@ -1,0 +1,19 @@
+\section{Evaluation}
+
+Recalling the data mining goal, an RMSE inferior to 2.5 and a MAE inferior to 2.0. Except KNN and Naive Bayes, all the other models satisfied the data mining goal, and the best performing one, reached an RMSE of 2.0247 and a MAE of 1.5572. With such an error, the model could be used in game at the end of the match to classify the players or to show how they performed during the game.
+The inference time is surprisingly low, considering the \textit{score time}, that calculates the whole test set, thus, about 269967 rows, in many cases it is lower than success the criteria.
+
+\subsection{Review process}
+
+This work brought an acceptable error to implement a ranking system in Rocket League based on Machine Learning, but it may be improved by further exploring more complex Neural Network models, since the MLP was the best performing model.
+
+Another more complex approach, is to extract features directly from the raw replay, instead of the given statistics. However, this would require more time to gather replays, given the limitations of the \textit{ballchasing} APIs and a tricky feature extraction phase, that could be manual or automatic using suitable Neural Network models, such as Recurrent NNs, since the replay is a large temporal sequence.
+
+
+\section{Deployment and Maintenance planning}
+
+For this project, the deployment could be done directly in the actual game, by integrating the model. The computation can be done client-side as the resulting models have a low inference time. As already mentioned, the predictive model can substitute the initial phase of the current ranking system that requires 10 matches to rank a player. So, they could be reduced to 3 matches, in order to have more robust scores, and the ranking can be done by averaging the results. After the initial ranking the system can be used in symbiosis with the current one. The amounts of gained or loss points at the end of the match, based on the win/loss can be reduced or increased for each player on the basis of the score given by the system, also in relation with the score given to the other players in the match. Therefore, it could end up in a fairer ranking system.
+
+There is another option of deployment, the system can be used to by players to measure how they performed in a given match, therefore, it could be set up a server accessible via API or even with a web front end, where players can load their replays in order to receive the score given by the system.
+
+Playstyle in Rocket League changes over time, therefore there will be the data-drift problem; thus, the model should been retrained in order to maintain their performances, at least once every three months. 

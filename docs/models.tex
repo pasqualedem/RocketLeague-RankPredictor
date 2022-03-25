@@ -32,28 +32,59 @@ Thus, we can say that we followed a manual greedy search of the hyperparameters.
 \note{}
 We start from the dataset not preprocessed, rule based models, like Random Forests, should not suffer from scale difference between features, so it could make sense to try to build models without preprocessing.
 
-\subsubsection{Dummy Classifier}
+\subsubsection{Dummy Regressor}
 
-A random classifier has been tested to check the gain of the other classifiers. Two strategy have been applied: \textbf{Most Frequent} and \textbf{Uniform sampling}. Results in \reftab{tab:val_dummy}.
-Note that results on different preprocessing are obviously the same, they can change only by grouping classes.
+A random regressor has been tested to check the gain of the other regressors. Two strategy have been applied: \textbf{Median} and \textbf{Mean}. Results in \reftab{tab:val_dummy}.
+Note that results on different preprocessing are obviously the same.
 
 \input{res/tables/val_tables/dummy.tex}
 
 \subsubsection{KNN Classifier}
 
-K-Nearest Neighbors classifier, with K=3. Results in \reftab{tab:val_knn}
+K-Nearest Neighbors classifier, with two different K. Results in \reftab{tab:val_knn}
 
 \input{res/tables/val_tables/knn.tex}
 
-\textbf{Linear classifier}
+\subsubsection{Linear classifier}
 
-Logistic regression with L2 penalty. Attempt to fit a simple model for this task. Results in \reftab{tab:nopre_val_linear}
+Attempt to fit a simple model for this task. Results in \reftab{tab:val_linear}
 
-\input{res/tables/val_tables/noprep_linear.tex}
+\input{res/tables/val_tables/linear.tex}
 
 
-\textbf{Multi Layer Perceptron}
+\subsubsection{Multi Layer Perceptron}
 
-MLP classifier, with batch size of 256 and 3 hidden layers, the first with 256 units, the second with 128 and the last with 64. Results in \reftab{tab:nopre_val_mlp}
+MLP classifier, with batch size of 256 and 3 hidden layers, the first with 256 units, the second with 128 and the last with 64. Results in % \reftab{tab:val_mlp}
 
-\input{res/tables/val_tables/noprep_mlp.tex}
+\input{res/tables/val_tables/mlp.tex}
+
+\subsubsection{Gaussian Naive Bayes}
+
+Gaussian Naive Bayes regressor, with a variable smoothing of 1e-09. Class priors given are the relative frequencies for each "classes". The term can be mislead as we are in practice making regression, but in this case we are building the predictor as a classifier.
+Results in \reftab{tab:val_nb}
+
+\input{res/tables/val_tables/nb.tex}
+
+
+\subsubsection{Random forest}
+
+Random forest regressor.
+Results in \reftab{tab:val_rf}
+
+\input{res/tables/val_tables/random_forest.tex}
+
+
+\subsubsection{XGBoost}
+
+XGBoost regressor.
+Results in \reftab{tab:val_xgb}
+
+\input{res/tables/val_tables/xgboost.tex}
+
+\subsection{Model comparison}
+
+After the hyperparameters have been selected from the validation and the final models have been trained on the whole training set, their results have to be compared. We can view them in \reftab{tab:test_res}.
+MLP regressor outperformed every other regressor with every preprocessing type. Despite its simplicity, the linear model is just below the MLP and had better results than most complex models such as XGBoost and RandomForests in a very short fit time. KNN, in addition to have poor results, has a long score time, therefore it isn't suitable for most applications.
+
+\input{res/tables/test.tex}
+

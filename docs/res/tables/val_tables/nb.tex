@@ -1,0 +1,16 @@
+\begin{table}[H]
+    \centering
+    \begin{tabular}{ll|llll}
+    \toprule
+    \textbf{preprocess} & \textbf{priors} & \textbf{fit time} & \textbf{score time} & \textbf{MAE} & \textbf{RMSE} \\ \midrule
+    \multirow{2}{*}{normal}   & None              & 1.067  & 0.9716 & 2.4879 & \textbf{3.5729} \\
+                              & Class frequencies & 1.0951 & 0.9856 & 2.4887 & 3.5748          \\
+    \multirow{2}{*}{grouped}  & None              & 1.0737 & 0.9685 & 2.4879 & \textbf{3.5729} \\
+                              & Class frequencies & 1.0962 & 0.9611 & 2.4887 & 3.5748          \\
+    \multirow{2}{*}{factored} & None              & 0.3195 & 0.2247 & 2.3821 & \textbf{3.4159} \\
+                              & Class frequencies & 0.3609 & 0.2394 & 2.3828 & 3.4181          \\
+    \bottomrule
+    \end{tabular}
+    \caption{Validation results of Gaussian Naive Bayes}
+    \label{tab:val_nb}
+    \end{table}
