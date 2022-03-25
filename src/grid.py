@@ -61,19 +61,27 @@ def parse_scores(scores):
 
 
 class Evaluator:
-    def __init__(self, exp_id, datapath, target_feature, X, y):
+    def __init__(self, exp_id, datapath, target_feature, validate, X, y):
         self.X = X
         self.y = y
         self.exp_id = exp_id
         self.datapath = datapath
         self.target_feature = target_feature
         self.client = MlflowClient()
+        self.validate = validate
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
             X, y, test_size=0.33, random_state=RANDOM_STATE, stratify=y)
 
     def fit(self, model_name, model, params):
-        scores_dict = GridSearch(self, model_name, model, params).fit()
-        params, scores = max(scores_dict, key=lambda elem: elem[1]['test_' + LEAD_METRIC])
+        grid_searcher = GridSearch(self, model_name, model, params)
+        if self.validate:
+            scores_dict = grid_searcher.fit()
+            params, scores = min(scores_dict, key=lambda elem: elem[1]['test_' + LEAD_METRIC])
+        else:
+            print('SKIPPING VALIDATION!!')
+            if len(grid_searcher.runs) > 1:
+                raise NotImplementedError('Not implemented Grid search in test phase')
+            params = grid_searcher.runs[0]
 
         run = self.client.create_run(experiment_id=self.exp_id)
         self.client.log_param(run.info.run_id, 'name', model_name)

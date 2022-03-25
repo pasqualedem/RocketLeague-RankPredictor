@@ -8,7 +8,7 @@ from grid import Evaluator
 
 from sklearn.linear_model import LinearRegression
 from sklearn.naive_bayes import GaussianNB
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.neural_network import MLPRegressor
 from xgboost import XGBRegressor
@@ -17,10 +17,10 @@ from sklearn.dummy import DummyRegressor
 ESTIMATORS = {
     'linear': LinearRegression,
     'naive_bayes': GaussianNB,
-    'random_forest': RandomForestClassifier,
+    'random_forest': RandomForestRegressor,
     'xgb': XGBRegressor,
     'knn': KNeighborsRegressor,
-    'mlpclassifier': MLPRegressor,
+    'mlp': MLPRegressor,
     'dummy': DummyRegressor
 }
 
@@ -43,16 +43,18 @@ class Trainer:
         self.grids = None
         self.datapath = None
         self.target_feature = None
+        self.validate = None
         self.parse_grids(param_path)
         self.build_dataset()
         self.setup_mlflow()
-        self.evluator = Evaluator(self.exp_id, self.datapath, self.target_feature, self.X, self.y)
+        self.evluator = Evaluator(self.exp_id, self.datapath, self.target_feature, self.validate, self.X, self.y)
 
     def parse_grids(self, param_path):
         with open(param_path, 'r') as param_stream:
             params = YAML().load(param_stream)
         self.datapath = params['data']['path']
         self.target_feature = params['data']['target']
+        self.validate = params['validation']
         self.grids = {model: parse_parameters(parameters) for model, parameters in params['models'].items()}
         self.exp_name = params['experiment']
 
