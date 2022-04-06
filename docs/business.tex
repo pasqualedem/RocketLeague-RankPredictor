@@ -23,7 +23,7 @@ Thus, each match follows more or less soccer rules, but instead of human players
     \label{fig:ranks}
 \end{figure}
 
-In each modality, the player, after playing 10 online matches, is classified into a rank, based on the result of the 10 played matches. The ranks (visually shown in \reffig{fig:ranks}) are: 
+In each modality, the player, after playing 10 competitive- online matches, is classified into a rank, based on the result of the 10 played matches. The ranks (visually shown in \reffig{fig:ranks}) are: 
 
 
 \begin{multicols}{3}
@@ -59,24 +59,23 @@ In each modality, the player, after playing 10 online matches, is classified int
 Each rank, is split in four divisions (Division I, II, III and IV). And, each rank with its divisions is itself a discretization of a number, that is the Match Making Ranking (MMR). 
 The MMR goes from 0 to potentially infinity, however the last rank: Supersonic Legend, takes the interval [1861, +Infinity]. A detailed view on MMRs and rankings is shown in \reftab{tab:mmrs}.
 
-When the player starts playing, it is assigned an MMR of 600, that correspond to Gold III Division II. The MMR increase or decrease basing on the outcome of the matches it plays, obviously if he wins it will increase, viceversa if he loses. How much it can gain or lose at the end of the match is based on the number of played matches. In the first match, the gain/loss is +/-150. In the second match the values is halved, in it logarithmically decrease, until after some dozen of matches, it converge to +/- 10.
+When the player starts playing, it is assigned an MMR of 600, that correspond to Gold III Division II. The MMR increase or decrease basing on the outcome of the matches it plays, obviously if he wins it will increase, viceversa if he loses. How much it can gain or lose at the end of the match is based on the number of played matches. In the first match, the gain/loss is +/-150. In the second match the values is halved, and after, it logarithmically decrease, until after some dozen of matches, it converge to +/- 10.
 
-With this system, the player, will be classified in its most appropriate rank after some matches and, therefore will compete with players of the same skill level.
+With this system, the player, will be classified in its most appropriate rank after a few dozen of matches and, therefore will compete with players of the same skill level.
 
-Our business objectives are, therefore two:
+Our business objective is, therefore:
 \begin{itemize}
-    \item Analyze the statistics of each player of a match and predict its rank based on the performances that he shown;
-    \item Divide players into categories based on the statistics of the match
+    \item Analyze the statistics of each player of a match and predict its rank based on the performances that he shown
 \end{itemize}
 \input{res/tables/mmrs}
 
-This work will result in a system able to measure the skill shown in a match for each player in a "short" amount of time, in order to be implemented in a real system. Also, another system will be built to produce a categorization useful to analyze the play styles.
+This work will result in a system able to measure the skill shown in a match for each player in a "short" amount of time, in order to be implemented in a real system.
 
 \subsection{Determine Data Mining Goals}
 \label{sec:min_goal}
-The first goal is a classification/regression task. There are 22 ranks, or we can possibly group by in 8, (bronze, silver, gold, platinum, diamond, champion, grand champion, SSL), therefore, it could a classification task. On the other hand we would lose the natural ordering of the classes, 
+The goal is a classification/regression task. There are 22 ranks, or we can possibly group by in 8, (bronze, silver, gold, platinum, diamond, champion, grand champion, SSL), therefore, it could a classification task. On the other hand we would lose the natural ordering of the classes, 
 
 The criteria will be based on RMSE and MAE, it will be accepted a MAE inferior to 2.0 and a RMSE inferior to 2.5. 
 Another criteria is the inference time, that should be less than 0.5 seconds, measured on a CPU AMD Ryzen 2600x.
 
-The second goal is a clustering task. In this case the success criteria is qualitative, the objective is to define a categorization of play styles, therefore if the recognized clusters and centroids have a significant meaning we can consider the task fulfilled.
+% The second goal is a clustering task. In this case the success criteria is qualitative, the objective is to define a categorization of play styles, therefore if the recognized clusters and centroids have a significant meaning we can consider the task fulfilled.

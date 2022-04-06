@@ -42,9 +42,14 @@ def fix_data(data):
     # Clean data
     na_possible_cols = ['percent_closest_to_ball', 'percent_farthest_from_ball', 'percent_most_forward',
                         'avg_distance_to_mates', 'time_most_back']
+
+    count_rows = 0
     for na_col in na_possible_cols:
-        data.drop(data[data[na_col].isna()].index, inplace=True)
+        na_rows = data[data[na_col].isna()].index
+        data.drop(na_rows, inplace=True)
         data.reset_index(inplace=True, drop=True)
+        count_rows += len(na_rows)
+    print(f"Rows with na: {count_rows}")
 
     return data
 

@@ -9,28 +9,28 @@ The data is collected through a platform called \textit{ballchasing.com} that al
 The replays are then viewable into a web based frontend and is possible to analyze different statistics from the replay. The platform provides also different HTTP API:
 
 \begin{itemize}
-    \item Get replay: returns the binary replay file given the ID;
-    \item Get replay list: returns a json involving summary of replays (including the ID to get the full replay) given different filters;
-    \item Get replay statistics: returns a full detailed statistics of the game for each player given the replay ID;
-    \item Upload replay: used by the plugin to upload replays;
-    \item Delete replay.
+    \item \textbf{Get replay}: returns the binary replay file given the ID;
+    \item \textbf{Get replay list}: returns a json involving summary of replays (including the ID to get the full replay) given different filters;
+    \item \textbf{Get replay statistics}: returns a full detailed statistics of the game for each player given the replay ID;
+    \item \textbf{Upload replay} used by the plugin to upload replays;
+    \item \textbf{Delete replay}.
 \end{itemize}
 
-It is important to clarify that a replay is not a video file as usual, but a large binary file containing various metadata on the match and the players and a table in which are listed all the information necessary to review the match.
-Therefore, for each instant \textit{(frame)} of the game, are listed position, direction and velocity vector of each player and the ball, and also other information of the input the players (e.g. player is using boost, player is drifting, etc...).
+It is important to clarify that a replay \textbf{is not a video} file as usual, but a large binary file containing various metadata on the match and the players and a table in which are listed all the information necessary to review the match.
+Therefore, for each instant \textit{(frame)} of the game, are listed position, direction and velocity vector of each player and the ball, and also other information of the inputs the players is giving (e.g. player is using boost, player is drifting, etc...).
 
-Extracting features from the raw replays can be very challenging, and the amount of possible features is quite high. However, the main problem about raw replays is API limitations, as it is possible to download only 200 replays per hour. Instead, we can download the replay statistics, as they are very detailed and provide stats about all the players, furthermore the limitation is 2000 per hour.
+Extracting features from the \textit{raw replays} can be very challenging, and the amount of possible features is quite high. However, the main problem about raw replays is API limitations, as it is possible to download only 200 replays per hour. Instead, we can download the \textit{replay statistics}, as they are very detailed and provide stats about all the players, furthermore the limitation is 2000 per hour.
 
-Thus, in this project, we used the calculated stats from the APIs. Each downloaded replay is saved in a JSON file. These, are hierarchical files contain also a lot of metadata and other useless for our task information about the match (e.g. stadium, car personalization of each player etc...). We discarded this data and take the stats about the six players in the match, which then results in 6 rows for each replay.
+Thus, in this project, it was used the calculated stats from the APIs. Each downloaded replay is saved in a JSON file. These, are hierarchical files that contain also a lot of metadata and other useless for our task information about the match (e.g. stadium, car personalization of each player etc...). It was discarded this data and take the stats about the six players in the match, which then results in 6 rows for each replay.
 
 Data was collected using \textit{random sampling} from the date. The date is sampled from a range starting from August 2021 until February 2022, that's because are the dates of the two last \textit{"Seasons"} of Rocket League. At the end of each season there is a soft reset of ranks: the MMR doesn't change but the players have to do again 10 matches where the MMR change at the end of the match is higher.
-I decided to not consider older seasons because the \textit{playstyle} and the distribution of players in Rocket League changes over time.
+It was decided to not consider older seasons because the \textit{playstyle} and the distribution of players in Rocket League changes over time.
 
-However, we have to discard some player rows where the rank information was missing. This is due to the fact that the rank in that match wasn't determined yet.
+However, it is necessary to discard some player rows where the rank information was missing. This is due to the fact that the rank in that match wasn't determined yet.
 
 \subsection{Describe data and features}
 
-The resulting dataset counts \note{data len} rows and 85 features in our data, let's briefly describe them:
+The resulting dataset counts 404951 rows and 85 features in our data, divided in five categories: Core Stats, Boost Stats, Movement Stats, Poistioning Stats and Demolitions Stats. Let's briefly describe them:
 
 \input{res/feature_list.tex}
 
@@ -45,17 +45,17 @@ Among these we can distinguish \textbf{categorical} and \textbf{numeric features
 All of our data is automatically collected, thus, is not subject to human errors.
 We cannot ensure that data is \textit{accurate}, so that stored value is the actual value, but we can assume it always because of the collection process.
 
-Data is \textit{incomplete}. There where a bunch of missing data in some dozen of rows in columns:\textit{percent\_closest\_to\_ball} \textit{percent\_farthest\_from\_ball}, \textit{percent\_most\_forward}, \textit{avg\_distance\_to\_mates}, \textit{time\_most\_back}.
-
+Data is \textbf{incomplete}. There where a bunch of missing data in some dozen of rows in columns:\textit{percent\_closest\_to\_ball} \textit{percent\_farthest\_from\_ball}, \textit{percent\_most\_forward}, \\ \textit{avg\_distance\_to\_mates}, \textit{time\_most\_back}. \\
 Missing values in this case are originated from leaving the match before the end, causing errors in the calculation of the metrics. We can notice that most of the missing values are in Bronze ranks, because they tend to care less about their rank and the game in general (leaving a ranked match will count as a loss and will ban you for short period from the ranked matches).
 
-Data is \textit{consistent}: the only measurement is time, and it is always in seconds. All other features are just numbers.
-Data is \textit{up-to date}: is collected from replays of the two last seasons, and, until the game mechanisms change, it isn't obsolete.
+Data is \textbf{consistent}: time measurements are given in seconds, distances in \textit{unreal units (= centimeters)} speeds in \textit{unreal units per second}; then we have counts and percentages.
+
+Data is \textbf{up-to date}: is collected from replays of the two last seasons, and, until the game mechanisms change, it isn't obsolete.
 
 \subsection{Clean data}
 
 In order to calculate summary statistics on our data we need to get rid of missing values and errors in our data.
-In this case the most appropriate solution is also the most simple, so, removing this rows from the dataset.
+In this case the most appropriate solution is also the most simple, as the number of rows containing missing values are 199, thus, removing this rows from the dataset.
 
 \subsection{Data exploration}
 
@@ -165,9 +165,7 @@ For sure we can say that variable in factor 6 and 7 are related and variables in
 From the preparation phase we produced 5 datasets:
 
 \begin{itemize}
-    \item Dataset selected: output of feature selection, without preprocessing
-    \item Dataset preprocessed: the dataset produced by scaling;
+    \item Dataset preprocessed: the dataset produced by the scaling;
     \item Dataset grouped preprocessed: the dataset produced by scaling done with grouping some variables;
-    \item Dataset merged preprocessed: the dataset produced by scaling and merging the tier classes;
-    \item Dataset merged factored: the dataset produced by merging the tier classes and performing a factor analysis
+    \item Dataset merged factored: the dataset produced by performing a factor analysis
 \end{itemize}
