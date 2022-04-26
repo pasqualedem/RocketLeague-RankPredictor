@@ -43,7 +43,8 @@ Among these we can distinguish \textbf{categorical} and \textbf{numeric features
 \subsection{Verify data quality}
 
 All of our data is automatically collected, thus, is not subject to human errors.
-We cannot ensure that data is \textit{accurate}, so that stored value is the actual value, but we can assume it always because of the collection process.
+It is possible to run some simple integrity check, values are all countings, therefore they must be all equal or greater than zero.
+The whole dataset passes this checks.
 
 Data is \textbf{incomplete}. There where a bunch of missing data in some dozen of rows in columns:\textit{percent\_closest\_to\_ball} \textit{percent\_farthest\_from\_ball}, \textit{percent\_most\_forward}, \\ \textit{avg\_distance\_to\_mates}, \textit{time\_most\_back}. \\
 Missing values in this case are originated from leaving the match before the end, causing errors in the calculation of the metrics. We can notice that most of the missing values are in Bronze ranks, because they tend to care less about their rank and the game in general (leaving a ranked match will count as a loss and will ban you for short period from the ranked matches).
