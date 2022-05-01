@@ -30,7 +30,7 @@ However, it is necessary to discard some player rows where the rank information 
 
 \subsection{Describe data and features}
 
-The resulting dataset counts 404951 rows and 85 features in our data, divided in five categories: Core Stats, Boost Stats, Movement Stats, Poistioning Stats and Demolitions Stats. Let's briefly describe them:
+The resulting dataset counts 404951 rows and 84 features in our data, divided in five categories: Core Stats, Boost Stats, Movement Stats, Poistioning Stats and Demolitions Stats. Let's briefly describe them:
 
 \input{res/feature_list.tex}
 
@@ -42,15 +42,16 @@ Among these we can distinguish \textbf{categorical} and \textbf{numeric features
 
 \subsection{Verify data quality}
 
-All of our data is automatically collected, thus, is not subject to human errors.
-We cannot ensure that data is \textit{accurate}, so that stored value is the actual value, but we can assume it always because of the collection process.
+All of the data is automatically generated and collected, thus, is not subject to human errors.
+We cannot ensure that data is \textit{accurate}, so that stored value is the actual value, but, a simple consistency check can but run.
+Most of the features are percentages, counts and times, therefore they should be greater than 0; in particular, percentages should be also lower than 100. All the rows passed this check.
 
 Data is \textbf{incomplete}. There where a bunch of missing data in some dozen of rows in columns:\textit{percent\_closest\_to\_ball} \textit{percent\_farthest\_from\_ball}, \textit{percent\_most\_forward}, \\ \textit{avg\_distance\_to\_mates}, \textit{time\_most\_back}. \\
 Missing values in this case are originated from leaving the match before the end, causing errors in the calculation of the metrics. We can notice that most of the missing values are in Bronze ranks, because they tend to care less about their rank and the game in general (leaving a ranked match will count as a loss and will ban you for short period from the ranked matches).
 
 Data is \textbf{consistent}: time measurements are given in seconds, distances in \textit{unreal units (= centimeters)} speeds in \textit{unreal units per second}; then we have counts and percentages.
 
-Data is \textbf{up-to date}: is collected from replays of the two last seasons, and, until the game mechanisms change, it isn't obsolete.
+Data is \textbf{up-to date}: data refers to a single match, and is calculated from the replay file. After the end, it cannot be updated so can't be outdated.
 
 \subsection{Clean data}
 
@@ -69,6 +70,35 @@ Let's see some statistics from our data:
 
 We can notice that the the bronze class had very few examples. This has two main reasons, the first one is that there are actually very few players in bronze, it's very difficult to get there basing on how ranking system works. The second reason is that players in bronze are casuals players that even don't know about the plugin necessary to upload replays. We can see the distribution of ranks for the current season (Season 5) in \reffig{fig:rank_distr} (orange). In the same figure we can see in blue the actual distribution of players, that is more or less normally distributed and centered. The data distribution is instead shifted to the right; as we said, skilled players tends to use and know about the plugin.
 
+Histograms and distribution plots have been made for all the features. However, distributions haven't shown no surprises and were quite expected; except for amount stolen big, that shows a mixture distribution with seven gaussians.
+In the following features, some of the mentioned plots are shown \reffig{fig:cat_features}:
+
+\begin{figure}[H]
+    \centering
+    \begin{tabular}{cc}
+        \includegraphics[width=0.5\linewidth]{res/imgs/plots/avg_distance.png} &
+        \includegraphics[width=0.5\linewidth]{res/imgs/plots/time.png} \\
+        \includegraphics[width=0.5\linewidth]{res/imgs/plots/distance.png} &
+        \includegraphics[width=0.5\linewidth]{res/imgs/plots/high_air.png} \\
+    \end{tabular}
+    \caption{Distribution plot of some continuous features}
+    \label{fig:cat_features}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{tabular}{cc}
+        \includegraphics[width=0.5\linewidth]{res/imgs/plots/saves.png} &
+        \includegraphics[width=0.5\linewidth]{res/imgs/plots/shots.png} \\
+        \includegraphics[width=0.5\linewidth]{res/imgs/plots/goal_against.png} &
+        \includegraphics[width=0.5\linewidth]{res/imgs/plots/stolen_big.png} \\
+        \includegraphics[width=0.5\linewidth]{res/imgs/plots/mvp.png} &
+        \includegraphics[width=0.5\linewidth]{res/imgs/plots/goals.png} \\
+    \end{tabular}
+    \caption{Histogram of some discrete features}
+    \label{fig:cat_features}
+\end{figure}
+
 \section{Data preparation}
 
 Data selection was automatically performed during the collection of the dataset. As already said, replays are randomly sampled between two dates representing two Rocket League seasons.
@@ -83,23 +113,15 @@ For feature selection the situation is different, the number of features is quit
 
 \input{res/tables/corr.tex}
 
-By this selection we removed 42 features, thus, nearly halving the dataset vertically. The adopted criterion is based on logical correlation, thus, by inspecting correlations, the removed features are the ones where we can find a motivation for the correlation, otherwise the correlation can be spurious.
+By this selection we removed 42 features, thus, halving the dataset vertically. The adopted criterion is based on logical correlation, thus, by inspecting correlations, the removed features are the ones where we can find a motivation for the correlation, otherwise the correlation can be spurious.
 
-In order to further reduce the dimensionality of the dataset another two tests have been ran: the information gain test and the chi square test, results are shown in \reffig{fig:ig} and \reffig{fig:chi_square}:
+In order to further reduce the dimensionality of the dataset another a test have been ran: the information gain test, results are shown in \reffig{fig:ig}:
 
 \begin{figure}[H]
     \resizebox{1.1\linewidth}{!}{\includegraphics{res/imgs/ig.pdf}}
     \label{fig:ig}
     \caption{Information gain results}
 \end{figure}
-
-\begin{figure}[H]
-    \resizebox{1.1\linewidth}{!}{\includegraphics{res/imgs/chi2.pdf}}
-    \label{fig:chi_square}
-    \caption{Chi square test results} 
-\end{figure}
-
-The results gave another insight on some kind of features uninformative. The features that are strictly related to the specific match and not on the playstyle and skill of the player. Such features are \textit{goals}, \textit{mvp}, \textit{assists} and \textit{goals\_against\_while\_last\_defender}.
 
 \subsection{Data construction}
 
@@ -110,38 +132,28 @@ The used scaling technique is called \textit{Robust Scaling}. It subtract the me
 This procedure has been applied to all the features except for some groups that needed particular attention.
 The first groups are the \textbf{percentual} features, they range from 0 to 100, therefore the normalization is useless; they have been simply divided by 100 to make them range from 0 to 1. 
 
-Other groups are:
-\begin{itemize}
-    \item \textit{avg\_distances}: which includes distance to ball with and without possession and distance to mates
-    \item \textit{overfill}: which includes amount of boost overfill, amount overfill stolen and stolen with big pads
-\end{itemize}
-
-These groups of features have relations and constraints that can be removed by the normalization, for example amount\_overfill is always greater than amount\_overfill\_stolen, and their difference is important. Therefore, each group, has been standardized like it is a unique features, in order to keep the relations
-
-
 \subsubsection{Factor analysis}
 
 Factor analysis is a linear statistical model. It is used to explain the variance among the observed variable and condense a set of the observed variable into the unobserved variable called factors. Observed variables are modeled as a linear combination of factors and error terms (Source). Factor or latent variable is associated with multiple observed variables, who have common patterns of responses. Each factor explains a particular amount of variance in the observed variables. It helps in data interpretations by reducing the number of variables.
 Factor Analysis addresses the problem of analyzing the structure of the interrelationships, among a large number of variables by defining a set of common underlying dimensions, known as \textbf{factors}. In this case, the analysis is suitable, and could improve the final metrics of the classifiers.
 
 Firstly, it is ran a statistical test, the \textbf{Bartlett test of Sphericity}; the result of the \textit{p-value} is 0.0, which is below the significance level, that is 0.01, this means that our data is suitable for PCA or factor analysis, in other terms, the correlation matrix is not an identity matrix, therefore there are variables that can be compressed because are correlated.
-After that, it another statistical test, the \textbf{Kaiser-Meyer-Olin} test. KMO estimates the proportion of variance among all the observed variables. Lower proportion is more suitable for factor analysis. KMO values range between 0 and 1. Value of KMO less than 0.6 is considered inadequate. The resulting value is 0.74, which is not excellent but still good to perform factor analysis.
+After that, it another statistical test, the \textbf{Kaiser-Meyer-Olin} test. KMO estimates the proportion of variance among all the observed variables. Lower proportion is more suitable for factor analysis. KMO values range between 0 and 1. Value of KMO less than 0.6 is considered inadequate. The resulting value is 0.72, which is not excellent but still good to perform factor analysis.
 
 The next step is choosing the number of factors, it is possible to use the Kaiser criterion or the scree plot.
 
 \begin{lstlisting}[caption=Eigenvalues vector, label=lst:eig, numbers=none]
-    8.23560479, 4.23322434, 3.22683551, 2.81685919, 2.30287244,
-    1.89468945, 1.77176288, 1.32000825, 1.24627339, 1.00624468,
-    0.96403381, 0.92449632, 0.84269987, 0.82747457, 0.77226586,
-    0.76199741, 0.69723765, 0.69105217, 0.67808479, 0.60368556,
-    0.59190556, 0.57496769, 0.51825302, 0.46937353, 0.37548574,
-    0.34613834, 0.32115293, 0.3107348 , 0.27012021, 0.2462839 ,
-    0.22761797, 0.18568548, 0.1833516 , 0.14390633, 0.12192532,
-    0.11567416, 0.08087169, 0.03868107, 0.02639674, 0.02272699,
-    0.01134398
+    6.66168999, 4.08644897, 2.83432441, 2.28558437, 1.84343317,
+    1.7371591 , 1.68384878, 1.22659406, 1.0839006 , 0.9532351 ,
+    0.93196593, 0.84942509, 0.81297165, 0.76319104, 0.71516273,
+    0.69252737, 0.6741302 , 0.64726297, 0.62468648, 0.5875707 ,
+    0.55865857, 0.47723509, 0.41265987, 0.36922481, 0.35178791,
+    0.31810623, 0.31006858, 0.28431297, 0.24621891, 0.21714735,
+    0.18559563, 0.15784588, 0.12932119, 0.12073377, 0.08820541,
+    0.07776513
 \end{lstlisting}
 
-We can see \reflst{lst:eig}, that there are only 8 values above 1.
+We can see \reflst{lst:eig}, that there are only 9 values above 1.
 
 \begin{figure}[H]
     \resizebox{1.1\linewidth}{!}{\includegraphics{res/imgs/scree.pdf}}
@@ -149,7 +161,7 @@ We can see \reflst{lst:eig}, that there are only 8 values above 1.
     \caption{Scree plot} 
 \end{figure}
 
-Also from the scree plot \reffig{fig:scree}, the elbow is around 8, so we can state the 8 factors should be adequate.
+Also from the scree plot \reffig{fig:scree}, the elbow is around 9-10, so we can state the 10 factors should be adequate.
 So we perform the factor analysis and print the \textit{factor loadings} \reffig{fig:loadings}.
 
 \begin{figure}[H]
@@ -158,7 +170,11 @@ So we perform the factor analysis and print the \textit{factor loadings} \reffig
     \caption{Loadings for each factor that are greater than 0.5 in absolute value} 
 \end{figure}
 
-For sure we can say that variable in factor 6 and 7 are related and variables in factor 3 are all percentage of boost. For factor 5 and 2, we have two groups of related variables. Variables in factor 4 are all amount of boosts. Lastly, for factors 0 and 1 there are some related variables, but others doesn't have a clear interpretation of their relations.
+Variables in factor 1, 5 and 9 are position related, those in factor 2 and 8 are all boost related, those in factor 3 are related to boost and speed. Factors 6 and 7 have some relations, shots give score and the amount of shots against is related with the number of saves. Lastly, for factors 0 and 4 there are some related variables, but others doesn't have a clear interpretation of their relations.
+
+\subsection{Format data}
+
+Data is stored as a Comma Separated Values (CSV) file.
 
 \subsection{Final produced datasets}
 
@@ -166,6 +182,5 @@ From the preparation phase we produced 5 datasets:
 
 \begin{itemize}
     \item Dataset preprocessed: the dataset produced by the scaling;
-    \item Dataset grouped preprocessed: the dataset produced by scaling done with grouping some variables;
-    \item Dataset merged factored: the dataset produced by performing a factor analysis
+    \item Dataset factored: the dataset produced by performing a factor analysis
 \end{itemize}

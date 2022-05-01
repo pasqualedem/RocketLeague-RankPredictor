@@ -3,6 +3,8 @@
 In this phase, data mining models are chosen and an evaluation plan is designed. After that, models are built, trained and evaluated.
 \subsection{Select modeling technique}
 
+\subsubsection{Model representation}
+
 According to \refseq{sec:min_goal}, our task is regression, thus \textit{supervised learning}. Also, it is necessary to consider that there are numerical features. From the plethora of models, has been chosen firstly Logistic Regression, according to Occam razor, always start from simpler models. Then have been select others that from literature, are known as accurate models, such as, Naive Bayes, k-Nearest Neighbors, Random forest, XGBoost and Multi Layer Perceptron. 
 In particular, for Naive Bayes, it was used the Gaussian Naive Bayes, suitable for numeric features.
 
@@ -41,7 +43,7 @@ K-Nearest Neighbors classifier, with two different K. Results in \reftab{tab:val
 
 \input{res/tables/val_tables/knn.tex}
 
-\subsubsection{Linear classifier}
+\subsubsection{Linear regressor}
 
 Attempt to fit a simple model for this task. Results in \reftab{tab:val_linear}
 
