@@ -84,6 +84,4 @@ However, a business expert in the game should be required to better quantify the
 The goal is a classification/regression task. There are 22 ranks, or we can possibly group by in 8, (bronze, silver, gold, platinum, diamond, champion, grand champion, SSL), therefore, it could a classification task. On the other hand we would lose the natural ordering of the classes, 
 
 The criteria will be based on RMSE and MAE, it will be accepted a MAE inferior to 2.0 and a RMSE inferior to 2.5. 
-Another criteria is the inference time, that should be less than 0.5 seconds, measured on a CPU AMD Ryzen 2600x.
-
-% The second goal is a clustering task. In this case the success criteria is qualitative, the objective is to define a categorization of play styles, therefore if the recognized clusters and centroids have a significant meaning we can consider the task fulfilled.
+Another criteria is the inference time on 6 examples (number of players in a match), that should be less than 0.5 seconds, measured on a CPU AMD Ryzen 2600x.

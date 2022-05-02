@@ -3,20 +3,15 @@
     \begin{tabular}{lll|llll}
     \toprule
     \textbf{preprocess} & \textbf{criterion} & \textbf{n° estimators} & \textbf{fit time} & \textbf{score time} & \textbf{MAE} & \textbf{RMSE} \\ \midrule
-    \multirow{4}{*}{normal}     & poisson       & 100 & 2375.7 & 0.7736  & 2.281           & 3.0503 \\
-                                & poisson       & 10  & 298.89 & 0.1124  & 2.3585          & 3.1484 \\
-                                & squared error & 100 & 149.54 & 0.2951  & \textbf{1.6597} & 2.1611 \\
-                                & squared error & 10  & 18.873 & 0.0483  & 1.7472          & 2.2769 \\
+    \multirow{4}{*}{normal}     & poisson       & 100 & 2291.5 & 0.6852 & 2.2782 & 3.0471 \\
+                                & poisson       & 10  & 286.08 & 0.1069 & 2.3557 & 3.1459 \\
+                                & squared error & 100 & 154.83 & 0.2701 & 1.6767 & \textbf{2.1819} \\
+                                & squared error & 10  & 19.03  & 0.0447 & 1.7649 & 2.3    \\
                                 \midrule
-    \multirow{4}{*}{grouped}    & poisson       & 100 & 5853.4 & 1.8964  & 2.2811          & 3.0503 \\
-                                & poisson       & 10  & 582.26 & 0.2023  & 2.3608          & 3.1499 \\
-                                & squared error & 100 & 378.69 & 0.5909  & \textbf{1.6603} & 2.1624 \\
-                                & squared error & 10  & 39.668 & 0.0742  & 1.7486          & 2.2814 \\
-                                \midrule
-    \multirow{4}{*}{factored}   & poisson       & 100 & 778.53 & 0.7561  & 2.3259          & 3.0673 \\
-                                & poisson       & 10  & 98.381 & 0.1049  & 2.4045          & 3.166  \\
-                                & squared error & 100 & 53.13  & 0.2947  & \textbf{1.9749} & 2.5454 \\
-                                & squared error & 10  & 7.0736 & 0.0485  & 2.0652          & 2.6674 \\
+    \multirow{4}{*}{factored}   & poisson       & 100 & 868.7  & 0.669  & 2.2544 & 2.9625 \\
+                                & poisson       & 10  & 107.24 & 0.0997 & 2.3291 & 3.0588 \\
+                                & squared error & 100 & 58.387 & 0.2771 & 1.9492 & \textbf{2.5074} \\
+                                & squared error & 10  & 7.1234 & 0.0405 & 2.0341 & 2.6224 \\
     \bottomrule
     \end{tabular}
     \caption{Validation results of Random Forest regressor}

@@ -4,29 +4,21 @@
     \toprule
     \textbf{preprocess} & \textbf{model} & \textbf{fit time} & \textbf{score time} & \textbf{MAE} & \textbf{RMSE} \\
     \midrule
-    \multirow{7}{*}{normal}   & dummy         & 0.1382          & 0.0045          & 3.9039          & 4.5511          \\
-                              & knn           & 0.0676          & 296.0647        & 2.0999          & 2.7127          \\
-                              & linear        & 3.9348          & 0.0119          & 1.8253          & 2.351           \\
-                              & \textbf{mlp}  & \textbf{256.14} & \textbf{0.2554} & \textbf{1.5572} & \textbf{2.0247} \\
-                              & naive bayes   & 1.2735          & 1.0172          & 2.4843          & 3.562           \\
-                              & random forest & 155.85          & 0.3898          & 1.6568          & 2.1576          \\
-                              & xgb           & 33.624          & 0.0185          & 1.6245          & 2.1024          \\
+    \multirow{7}{*}{normal}   & dummy         & 0.0082          & 0.0045          & 3.9039 & 4.5511 \\
+                              & knn           & 0.0676          & 296.0647        & 2.1571 & 2.7837 \\
+                              & linear        & 3.9348          & 0.0119          & 1.8501 & 2.3843 \\
+                              & \textbf{mlp}  & \textbf{256.14} & \textbf{0.2554} & 1.571  & \textbf{2.0454} \\
+                              & naive bayes   & 1.2735          & 1.0172          & 2.3666 & 3.3452 \\
+                              & random forest & 155.85          & 0.3898          & 1.673  & 2.1785 \\
+                              & xgb           & 33.624          & 0.0185          & 1.646  & 2.1277 \\
                               \midrule
-    \multirow{7}{*}{grouped}  & dummy         & 0.1383          & 0.0047          & 3.9039          & 4.5511          \\
-                              & knn           & 0.0685          & 293.4415        & 2.1222          & 2.7418          \\
-                              & linear        & 3.917           & 0.0123          & 1.8253          & 2.351           \\
-                              & \textbf{mlp}  & \textbf{163.33} & \textbf{0.1234} & \textbf{1.5626} & \textbf{2.0275} \\
-                              & naive bayes   & 1.2484          & 1.1646          & 2.4843          & 3.562           \\
-                              & random forest & 383.82          & 0.6383          & 1.6568          & 2.158           \\
-                              & xgb           & 34.464          & 0.0245          & 1.6245          & 2.1024          \\
-                              \midrule
-    \multirow{7}{*}{factored} & dummy         & 0.1379          & 0.0039          & 3.9039          & 4.5511          \\
-                              & knn           & 0.4878          & 6.5152          & 2.1222          & 2.7418          \\
-                              & linear        & 0.394           & 0.0084          & 1.8253          & 2.351           \\
-                              & \textbf{mlp}  & \textbf{91.344} & \textbf{0.1004} & \textbf{1.5642} & \textbf{2.0268} \\
-                              & naive bayes   & 0.3593          & 0.2543          & 2.4843          & 3.562           \\
-                              & random forest & 58.197          & 0.3494          & 1.6569          & 2.1572          \\
-                              & xgb           & 19.148          & 0.0156          & 1.6245          & 2.1024          \\
+    \multirow{7}{*}{factored} & dummy         & 0.0082 & 0.0045 & 3.9039 & 4.5511 \\
+                              & knn           & 0.5632 & 7.3532 & 2.1475 & 2.7641 \\
+                              & linear        & 0.5239 & 0.0053 & 2.114  & 2.6793 \\
+                              & \textbf{mlp}  & \textbf{136.23} & \textbf{0.1384} & \textbf{1.9234} & \textbf{2.474}  \\
+                              & naive bayes   & 0.363  & 0.2873 & 2.306  & 3.2595 \\
+                              & random forest & 64.724 & 0.3123 & 1.9423 & 2.4984 \\
+                              & xgb           & 25.782 & 0.0179 & 1.9618 & 2.5185 \\
     \bottomrule
     \end{tabular}
     \caption{Testing results for each model}

@@ -82,11 +82,13 @@ Results in \reftab{tab:val_xgb}
 \subsection{Model comparison}
 
 After the hyperparameters have been selected from the validation and the final models have been trained on the whole training set, their results have to be compared. We can view them in \reftab{tab:test_res}.
-MLP regressor outperformed every other regressor with every preprocessing type. Despite its simplicity, the linear model is just below the MLP and had better results than most complex models such as XGBoost and RandomForests in a very short fit time. KNN, in addition to have poor results, has a long score time, therefore it isn't the most suitable for real time applications.
+MLP regressor outperformed every other regressor with every preprocessing type. Despite its simplicity, the linear model is just below the MLP.KNN, in addition to have poor results, has a long score time, therefore it isn't the most suitable for real time applications. As expected, Naive Bayes that is a classifier that was treated as a regressor had the worst results.
+
+Normal preprocessing achieved lower errors than factor preprocessing, thus, the removed information was useful to the task, or an higher number of factors was required; nevertheless, it has a training time significantly lower than the normal preprocessing. 
 
 \input{res/tables/test.tex}
 
 \subsection{Assess model}
 
-Recalling the data mining goal, an RMSE inferior to 2.5 and a MAE inferior to 2.0. Except KNN and Naive Bayes, all the other models satisfied the data mining goal, and the best performing one, reached an RMSE of 2.0247 and a MAE of 1.5572. With such an error, the model could be used in game at the end of the match to classify the players or to show how they performed during the game.
-The inference time is surprisingly low, considering the \textit{score time}, that calculates the whole test set, thus, about 269967 rows, in many cases it is lower than success the criteria.
+Recalling the data mining goal, an RMSE inferior to 2.5 and a MAE inferior to 2.0. Except KNN and Naive Bayes, all the other models satisfied the data mining goal, and the best performing one, reached an RMSE of 2.0454 and a MAE of 1.571. With such an error, the model could be used in game at the end of the match to classify the players or to show how they performed during the game.
+The inference time is surprisingly low, considering the \textit{score time}, that calculates the whole test set, thus, about 269967 rows, in many cases it is lower than success the criteria, considering that it would be on 6 rows (number of players in a match).
