@@ -1006,3 +1006,7 @@ mlruns
 .idea
 .stignore
 RLVenv
+
+*.xlsx
+*.bat
+*.ps1

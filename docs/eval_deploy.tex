@@ -1,11 +1,9 @@
 \section{Evaluation}
 
-Recalling the data mining goal, an RMSE inferior to 2.5 and a MAE inferior to 2.0. Except KNN and Naive Bayes, all the other models satisfied the data mining goal, and the best performing one, reached an RMSE of 2.0247 and a MAE of 1.5572. With such an error, the model could be used in game at the end of the match to classify the players or to show how they performed during the game.
-The inference time is surprisingly low, considering the \textit{score time}, that calculates the whole test set, thus, about 269967 rows, in many cases it is lower than success the criteria.
-
+This phase requires a Business Analyst to be executed, which is not present in this work, however, it could be assumed that a ranking system that evaluate player performances instead of only match results, if it properly works, could be more satisfying for the players. Thus, it is conceivable supposing a positive feedback and an increment to the player community.
 \subsection{Review process}
 
-This work brought an acceptable error to implement a ranking system in Rocket League based on Machine Learning, but it may be improved by further exploring more complex Neural Network models, since the MLP was the best performing model.
+This work brought an acceptable error to implement a ranking system in Rocket League based on Machine Learning, but it may be improved by further exploring more complex Neural Network models, since the MLP was the best performing model. However, the improvement margin is very tight, and is limited by the data; in the current ranking system, people in adjacent ranking have very similar skills, furthermore, it could even not be possible to summarize all the player skill to a single scalar. Thus, achieving an absolute error lower than 1 or even 1.5 could be very challenging or impossible.
 
 Another more complex approach, is to extract features directly from the raw replay, instead of the given statistics. However, this would require more time to gather replays, given the limitations of the \textit{ballchasing} APIs and a tricky feature extraction phase, that could be manual or automatic using suitable Neural Network models, such as Recurrent NNs, since the replay is a large temporal sequence.
 
@@ -16,4 +14,4 @@ For this project, the deployment could be done directly in the actual game, by i
 
 There is another option of deployment, the system can be used to by players to measure how they performed in a given match, therefore, it could be set up a server accessible via API or even with a web front end, where players can load their replays in order to receive the score given by the system.
 
-Playstyle in Rocket League changes over time, therefore there will be the data-drift problem; thus, the model should been retrained in order to maintain their performances, at least once every three months. 
+Play-style in Rocket League changes over time, therefore there will be the data-drift problem; thus, the model should been retrained in order to maintain their performances, at least once every three months. 

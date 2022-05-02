@@ -86,3 +86,7 @@ MLP regressor outperformed every other regressor with every preprocessing type. 
 
 \input{res/tables/test.tex}
 
+\subsection{Assess model}
+
+Recalling the data mining goal, an RMSE inferior to 2.5 and a MAE inferior to 2.0. Except KNN and Naive Bayes, all the other models satisfied the data mining goal, and the best performing one, reached an RMSE of 2.0247 and a MAE of 1.5572. With such an error, the model could be used in game at the end of the match to classify the players or to show how they performed during the game.
+The inference time is surprisingly low, considering the \textit{score time}, that calculates the whole test set, thus, about 269967 rows, in many cases it is lower than success the criteria.
