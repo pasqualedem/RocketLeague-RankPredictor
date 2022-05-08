@@ -3,10 +3,8 @@
 In this phase, data mining models are chosen and an evaluation plan is designed. After that, models are built, trained and evaluated.
 \subsection{Select modeling technique}
 
-\subsubsection{Model representation}
-
-According to \refseq{sec:min_goal}, our task is regression, thus \textit{supervised learning}. Also, it is necessary to consider that there are numerical features. From the plethora of models, has been chosen firstly Logistic Regression, according to Occam razor, always start from simpler models. Then have been select others that from literature, are known as accurate models, such as, Naive Bayes, k-Nearest Neighbors, Random forest, XGBoost and Multi Layer Perceptron. 
-In particular, for Naive Bayes, it was used the Gaussian Naive Bayes, suitable for numeric features.
+According to \refseq{sec:min_goal}, the task is regression, thus \textit{supervised learning}. Also, it is necessary to consider that there are numerical features. From the plethora of models, has been chosen firstly Linear Regression, according to Occam razor, always start from simpler models. Then have been select others that from literature, are known as accurate models, such as, Naive Bayes, k-Nearest Neighbors, Random forest, XGBoost and Multi Layer Perceptron. 
+In particular, for Naive Bayes, it was used the Gaussian Naive Bayes, suitable for numeric features. Altough it is a classifier, it is very fast and an attempt could be made.
 
 
 \subsection{Generate Test Design}
@@ -15,7 +13,7 @@ After selecting the models, it is crucial to chose appropriate technique for ass
 
 \subsubsection{Metrics}
 
-First of all, it is needed to chose the metrics to calculate the performances. In this case, having a regression, the most used metrics are \textit{Mean Absolute Error (MAE)} and \textit{Root Mean Squared error (RMSE)}. The guidance metric to choose models will be RMSE, in order to penalize more greater errors.
+First of all, it is needed to chose the metrics to calculate the performances. In this case, having a regression, the most used metrics are \textit{Mean Absolute Error (MAE)} and \textit{Root Mean Squared error (RMSE)}. The guidance metric to choose models will be RMSE, in order to penalize greater errors.
 
 \subsubsection{Evaluation technique}
 
@@ -58,8 +56,8 @@ MLP classifier, with batch size of 256 and 3 hidden layers, the first with 256 u
 
 \subsubsection{Gaussian Naive Bayes}
 
-Gaussian Naive Bayes regressor, with a variable smoothing of 1e-09. Class priors given are the relative frequencies for each "classes". The term can be mislead as we are in practice making regression, but in this case we are building the predictor as a classifier.
-Results in \reftab{tab:val_nb}
+Gaussian Naive Bayes regressor, with a variable smoothing of 1e-09. Class priors given are the relative frequencies for each "classes". The term can be mislead as the current task is regression, but in this case the model built is a classifier.
+Results in \reftab{tab:val_nb}.
 
 \input{res/tables/val_tables/nb.tex}
 
@@ -82,7 +80,7 @@ Results in \reftab{tab:val_xgb}
 \subsection{Model comparison}
 
 After the hyperparameters have been selected from the validation and the final models have been trained on the whole training set, their results have to be compared. We can view them in \reftab{tab:test_res}.
-MLP regressor outperformed every other regressor with every preprocessing type. Despite its simplicity, the linear model is just below the MLP.KNN, in addition to have poor results, has a long score time, therefore it isn't the most suitable for real time applications. As expected, Naive Bayes that is a classifier that was treated as a regressor had the worst results.
+MLP regressor outperformed every other regressor with every preprocessing type. Despite its simplicity, the linear model is just below the MLP. KNN, in addition to have poor results, has a long score time, therefore it isn't the most suitable for real time applications. As expected, Naive Bayes that is a classifier that was treated as a regressor had the worst results.
 
 Normal preprocessing achieved lower errors than factor preprocessing, thus, the removed information was useful to the task, or an higher number of factors was required; nevertheless, it has a training time significantly lower than the normal preprocessing. 
 
@@ -90,5 +88,5 @@ Normal preprocessing achieved lower errors than factor preprocessing, thus, the 
 
 \subsection{Assess model}
 
-Recalling the data mining goal, an RMSE inferior to 2.5 and a MAE inferior to 2.0. Except KNN and Naive Bayes, all the other models satisfied the data mining goal, and the best performing one, reached an RMSE of 2.0454 and a MAE of 1.571. With such an error, the model could be used in game at the end of the match to classify the players or to show how they performed during the game.
+Recalling the data mining goal, an RMSE inferior to 2.5 and a MAE inferior to 2.0. Except KNN and Naive Bayes, all the other models satisfied the data mining goal, and the best performing one, reached an RMSE of 2.0454 and a MAE of 1.571. With such an error, the model could be used in game at the end of the match to rank the players or to show how they performed during the game.
 The inference time is surprisingly low, considering the \textit{score time}, that calculates the whole test set, thus, about 269967 rows, in many cases it is lower than success the criteria, considering that it would be on 6 rows (number of players in a match).

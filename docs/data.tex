@@ -1,6 +1,6 @@
 \section{Data understanding} \label{seq:data_understanding}
 
- In this step the objective is to consider the available data, understand their properties, check its quality and explore it through statistical methods.
+ In this phase the objective is to consider the available data, understand their properties, check its quality and explore it through statistical methods.
 
  \subsection{Collect initial data}
 
@@ -23,10 +23,11 @@ Extracting features from the \textit{raw replays} can be very challenging, and t
 
 Thus, in this project, it was used the calculated stats from the APIs. Each downloaded replay is saved in a JSON file. These, are hierarchical files that contain also a lot of metadata and other useless for our task information about the match (e.g. stadium, car personalization of each player etc...). It was discarded this data and take the stats about the six players in the match, which then results in 6 rows for each replay.
 
-Data was collected using \textit{random sampling} from the date. The date is sampled from a range starting from August 2021 until February 2022, that's because are the dates of the two last \textit{"Seasons"} of Rocket League. At the end of each season there is a soft reset of ranks: the MMR doesn't change but the players have to do again 10 matches where the MMR change at the end of the match is higher.
+Data was collected using \textit{cluster sampling} from the date-hour, thus sampling the start-date, and then getting all the replay in a given range. The date is sampled from a range starting from August 2021 until February 2022, that's because are the dates of the two last \textit{"Seasons"} of Rocket League. At the end of each season there is a soft reset of ranks: the MMR doesn't change but the players have to do again 10 matches where the MMR change at the end of the match is higher.
 It was decided to not consider older seasons because the \textit{playstyle} and the distribution of players in Rocket League changes over time.
 
-However, it is necessary to discard some player rows where the rank information was missing. This is due to the fact that the rank in that match wasn't determined yet.
+The sampling was repeated for each rank, changing the hour-range, because for lower ranks, less replays were retrieved; this was an attempt to balance the rank distribution, thus, a sort of stratified sampling.
+Anyway, for these ranks, system would return always the same replays, therefore, the process is stopped when the \textit{new\_replays / retrieved\_replays} hit a certain number. The whole process was repeated, adjusting the parameters at each iteration (extension of range for certain ranks, new replay ratio), until \textit{N} replays are retrieved. The target was to have hundred of thousands of replays.
 
 \subsection{Describe data and features}
 
@@ -46,7 +47,7 @@ All of the data is automatically generated and collected, thus, is not subject t
 We cannot ensure that data is \textit{accurate}, so that stored value is the actual value, but, a simple consistency check can but run.
 Most of the features are percentages, counts and times, therefore they should be greater than 0; in particular, percentages should be also lower than 100. All the rows passed this check.
 
-Data is \textbf{incomplete}. There where a bunch of missing data in some dozen of rows in columns:\textit{percent\_closest\_to\_ball} \textit{percent\_farthest\_from\_ball}, \textit{percent\_most\_forward}, \\ \textit{avg\_distance\_to\_mates}, \textit{time\_most\_back}. \\
+Data is \textbf{incomplete}. There where a bunch of missing data in some dozen of rows in columns:\textit{percent\_closest\_to\_ball} \textit{percent\_farthest\_from\_ball}, \textit{percent\_most\_forward}, \\ \textit{avg\_distance\_to\_mates}, \textit{time\_most\_back} and also in the target row, \textit{tier}. \\
 Missing values in this case are originated from leaving the match before the end, causing errors in the calculation of the metrics. We can notice that most of the missing values are in Bronze ranks, because they tend to care less about their rank and the game in general (leaving a ranked match will count as a loss and will ban you for short period from the ranked matches).
 
 Data is \textbf{consistent}: time measurements are given in seconds, distances in \textit{unreal units (= centimeters)} speeds in \textit{unreal units per second}; then we have counts and percentages.
@@ -70,13 +71,13 @@ Let's see some statistics from our data:
 
 We can notice that the the bronze class had very few examples. This has two main reasons, the first one is that there are actually very few players in bronze, it's very difficult to get there basing on how ranking system works. The second reason is that players in bronze are casuals players that even don't know about the plugin necessary to upload replays. We can see the distribution of ranks for the current season (Season 5) in \reffig{fig:rank_distr} (orange). In the same figure we can see in blue the actual distribution of players, that is more or less normally distributed and centered. The data distribution is instead shifted to the right; as we said, skilled players tends to use and know about the plugin.
 
-Histograms and distribution plots have been made for all the features. However, distributions haven't shown no surprises and were quite expected; except for amount stolen big, that shows a mixture distribution with seven gaussians.
+Histograms and distribution plots have been made for all the features. However, distributions haven't shown no surprises and were quite expected; unless for a light skewness of some (e.g. percent\_full\_boost, time\_high\_air). An exception, is amount stolen big, that shows a mixture distribution with seven gaussians.
 In the following features, some of the mentioned plots are shown \reffig{fig:cat_features}:
 
 \begin{figure}[H]
     \centering
     \begin{tabular}{cc}
-        \includegraphics[width=0.5\linewidth]{res/imgs/plots/avg_distance.png} &
+        \includegraphics[width=0.5\linewidth]{res/imgs/plots/perrcent_boost.png} &
         \includegraphics[width=0.5\linewidth]{res/imgs/plots/time.png} \\
         \includegraphics[width=0.5\linewidth]{res/imgs/plots/distance.png} &
         \includegraphics[width=0.5\linewidth]{res/imgs/plots/high_air.png} \\
@@ -123,22 +124,24 @@ In order to further reduce the dimensionality of the dataset another a test have
     \caption{Information gain results}
 \end{figure}
 
+The results from thi test gave another insight on some kind of uninformative features. The features that are strictly related to the specific match and not on the playstyle and skill of the player. Such ones are \textit{goals}, \textit{mvp}, \textit{assists} and \textit{goals\_against\_while\_last\_defender} and have been removed. The final dataset counts 37 features.
+
 \subsection{Data construction}
 
 In this step there will be gonna built the final dataset provided to the models.
 
-Features of this dataset have different measurement units and scales, therefore features with bigger scales will be considered more important for some models, for example linear regression. We need to scale the data.
-The used scaling technique is called \textit{Robust Scaling}. It subtract the median and divides using the \textit{interquantile range (IQR)} instead of the mean and the standard deviation differently from normalization. It has been used the IQR between the 1st quartile (25th quantile) and the 3rd quartile (75th quantile).
-This procedure has been applied to all the features except for some groups that needed particular attention.
-The first groups are the \textbf{percentual} features, they range from 0 to 100, therefore the normalization is useless; they have been simply divided by 100 to make them range from 0 to 1. 
+Features of this dataset have different measurement units and scales, therefore features with bigger scales will be considered more important for some models, for example linear regression. Data need to be scaled.
+The used scaling technique is called \textit{Robust Scaling}, proper for skewed data. It subtract the median and divides using the \textit{interquantile range (IQR)} instead of the mean and the standard deviation differently from z-score. It has been used the IQR between the 1st quartile (25th quantile) and the 3rd quartile (75th quantile).
+This procedure has been applied to all the features except for the percentages.
+They range from 0 to 100, therefore they have been simply divided by 100 to make them range from 0 to 1 (\textit{Decimal scaling}). 
 
 \subsubsection{Factor analysis}
 
-Factor analysis is a linear statistical model. It is used to explain the variance among the observed variable and condense a set of the observed variable into the unobserved variable called factors. Observed variables are modeled as a linear combination of factors and error terms (Source). Factor or latent variable is associated with multiple observed variables, who have common patterns of responses. Each factor explains a particular amount of variance in the observed variables. It helps in data interpretations by reducing the number of variables.
-Factor Analysis addresses the problem of analyzing the structure of the interrelationships, among a large number of variables by defining a set of common underlying dimensions, known as \textbf{factors}. In this case, the analysis is suitable, and could improve the final metrics of the classifiers.
+Factor analysis is a linear statistical model. It is used to explain the variance among the observed variable and condense a set of the observed variable into the unobserved variable called factors. Observed variables are modeled as a linear combination of factors and error terms (Source). Factor or latent variable is associated with multiple observed variables, who have common patterns of responses. Each factor explains a particular amount of variance in the observed variables.
+Factor Analysis addresses the problem of analyzing the structure of the interrelationships, among a large number of variables by defining a set of common underlying dimensions, known as \textbf{factors}. In this case, the analysis is suitable, and could improve the final metrics of the regressors.
 
 Firstly, it is ran a statistical test, the \textbf{Bartlett test of Sphericity}; the result of the \textit{p-value} is 0.0, which is below the significance level, that is 0.01, this means that our data is suitable for PCA or factor analysis, in other terms, the correlation matrix is not an identity matrix, therefore there are variables that can be compressed because are correlated.
-After that, it another statistical test, the \textbf{Kaiser-Meyer-Olin} test. KMO estimates the proportion of variance among all the observed variables. Lower proportion is more suitable for factor analysis. KMO values range between 0 and 1. Value of KMO less than 0.6 is considered inadequate. The resulting value is 0.72, which is not excellent but still good to perform factor analysis.
+After that, it is performed another statistical test, the \textbf{Kaiser-Meyer-Olin} test. KMO estimates the proportion of variance among all the observed variables. Lower proportion is more suitable for factor analysis. KMO values range between 0 and 1. Value of KMO less than 0.6 is considered inadequate. The resulting value is 0.72, which is not excellent but still good to perform factor analysis.
 
 The next step is choosing the number of factors, it is possible to use the Kaiser criterion or the scree plot.
 
@@ -153,7 +156,7 @@ The next step is choosing the number of factors, it is possible to use the Kaise
     0.07776513
 \end{lstlisting}
 
-We can see \reflst{lst:eig}, that there are only 9 values above 1.
+From \reflst{lst:eig}, it is possible to see that there are only 9 values above 1.
 
 \begin{figure}[H]
     \resizebox{1.1\linewidth}{!}{\includegraphics{res/imgs/scree.pdf}}
@@ -161,16 +164,16 @@ We can see \reflst{lst:eig}, that there are only 9 values above 1.
     \caption{Scree plot} 
 \end{figure}
 
-Also from the scree plot \reffig{fig:scree}, the elbow is around 9-10, so we can state the 10 factors should be adequate.
-So we perform the factor analysis and print the \textit{factor loadings} \reffig{fig:loadings}.
+Also from the scree plot \reffig{fig:scree}, the elbow is around 9-10, so it is possible to state that 10 factors should be adequate.
+So the factor analysis is performed and \textit{factor loadings} are printed \reffig{fig:loadings}.
 
 \begin{figure}[H]
     \resizebox{1.1\linewidth}{!}{\includegraphics{res/imgs/loadings.png}}
     \label{fig:loadings}
-    \caption{Loadings for each factor that are greater than 0.5 in absolute value} 
+    \caption{Loadings for each factor that are greater than 0.4 in absolute value} 
 \end{figure}
 
-Variables in factor 1, 5 and 9 are position related, those in factor 2 and 8 are all boost related, those in factor 3 are related to boost and speed. Factors 6 and 7 have some relations, shots give score and the amount of shots against is related with the number of saves. Lastly, for factors 0 and 4 there are some related variables, but others doesn't have a clear interpretation of their relations.
+Variables in factor 1, 5 and 9 are position related, those in factor 2 and 8 are all boost related, those in factor 3 are related to boost and speed. Factors 6 and 7 have some relations: about factor 6, shots give score and the amount of shots against is related with the number of saves; about factor 7, positioning in the field is related to the number of saves and shots received. Lastly, for factors 0 and 4 there are some related variables, but others doesn't have a clear interpretation of their relations.
 
 \subsection{Format data}
 
@@ -181,6 +184,6 @@ Data is stored as a Comma Separated Values (CSV) file.
 From the preparation phase we produced 5 datasets:
 
 \begin{itemize}
-    \item Dataset preprocessed: the dataset produced by the scaling;
-    \item Dataset factored: the dataset produced by performing a factor analysis
+    \item \textbf{Dataset preprocessed}: the dataset produced by the scaling;
+    \item \textbf{Dataset factored}: the dataset produced by performing a factor analysis.
 \end{itemize}

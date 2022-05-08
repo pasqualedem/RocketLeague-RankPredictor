@@ -1,9 +1,6 @@
 \section{Business understanding} \label{seq:business}
 
- In this step the objective is to determine and understand the context and the scope of the project. So it has a lot in common with the initial steps of any significant project undertaking.
-
- \subsection{Determine Business Objectives}
-
+ In this phase the objective is to determine and understand the context and the scope of the project. So it has a lot in common with the initial steps of any significant project undertaking.
 
 \begin{figure}[h]
     \includegraphics[width=\linewidth]{res/RL}
@@ -62,10 +59,14 @@ The MMR goes from 0 to potentially infinity, however the last rank: Supersonic L
 When the player starts playing, it is assigned an MMR of 600, that correspond to Gold III Division II. The MMR increase or decrease basing on the outcome of the matches it plays, obviously if he wins it will increase, viceversa if he loses. How much it can gain or lose at the end of the match is based on the number of played matches. In the first match, the gain/loss is +/-150. In the second match the values is halved, and after, it logarithmically decrease, until after some dozen of matches, it converge to +/- 10.
 
 With this system, the player, will be classified in its most appropriate rank after a few dozen of matches and, therefore will compete with players of the same skill level.
+Ranking, is also only determined by the outcome of the match, making the player experience frustrating in some cases. These are the business problems, thus the opportunity is making a more fast ranking system, and also more fair, taking in account the performance of the player in the match, in order to give also a meritocratic system.
+
+\subsection{Determine Business Objectives}
 
 Our business objective is, therefore:
 \begin{itemize}
-    \item Analyze the statistics of each player of a match and predict its rank based on the performances that he shown
+    \item Increase in daily active players;
+    \item Comeback of players that abandoned the game.
 \end{itemize}
 \input{res/tables/mmrs}
 
@@ -73,15 +74,14 @@ This work will result in a system able to measure the skill shown in a match for
 The business success criteria are:
 \begin{itemize}
     \item Positive feedback by the community after its implementation;
-    \item Increase in daily active players;
-    \item Prediction should be computed within 1 second on the game servers.
+    \item Increase in daily active players by 5\%.
 \end{itemize}
 
-However, a business expert in the game should be required to better quantify the success criteria.
+However, a business expert should be required to better quantify the success criteria.
 
 \subsection{Determine Data Mining Goals}
 \label{sec:min_goal}
-The goal is a classification/regression task. There are 22 ranks, or we can possibly group by in 8, (bronze, silver, gold, platinum, diamond, champion, grand champion, SSL), therefore, it could a classification task. On the other hand we would lose the natural ordering of the classes, 
+The goal is a classification/regression task, therefore a prediction task. There are 22 ranks, or we can possibly group by in 8, (bronze, silver, gold, platinum, diamond, champion, grand champion, SSL), therefore, it could be a classification task. On the other hand we would lose the natural ordering of the classes, furthermore, the ranks are a discretization of the MMR, that is a numeric continuous variable. Thus, the more appropriate task is regression.
 
 The criteria will be based on RMSE and MAE, it will be accepted a MAE inferior to 2.0 and a RMSE inferior to 2.5. 
 Another criteria is the inference time on 6 examples (number of players in a match), that should be less than 0.5 seconds, measured on a CPU AMD Ryzen 2600x.
