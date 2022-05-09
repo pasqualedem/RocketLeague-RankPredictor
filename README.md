@@ -25,7 +25,7 @@ Install requirements
 
 ### Retrieve replays
 
-Configure PARAMETERS variable in retrieve.py and then:
+Configure `PARAMETERS` variable in retrieve.py and then:
 
     python src/retrieve.py
     
@@ -39,4 +39,18 @@ Follow data_exploration.ipynb and data_preprocess.ipynb
 
 ### Modeling
 
-Launch grid searches using 
+Launch grid searches using:
+        
+    python src/train.py
+
+Parameters are set in `parameters.yaml`.
+It is already filled with parameters used in the case study.
+
+Change from `dataset_normal_preprocessed.csv` to `dataset_factored.csv` to run experiments with factored dataset
+
+### View results
+
+Use the interactive view of mlflow:
+
+    mlflow ui
+
