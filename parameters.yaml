@@ -1,4 +1,5 @@
-experiment: Normal Preprocess new
+experiment: Normal Preprocess
+# experiment: Factor Preprocess
 validation: True
 models:
   dummy:
@@ -31,4 +32,5 @@ models:
 
 data:
   path: 'data/preprocessed/dataset_normal_preprocessed.csv'
+  # path: 'data/preprocessed/dataset_factored.csv'  # for factor preprocessed data
   target: 'tier'
